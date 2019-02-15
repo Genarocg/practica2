@@ -13,16 +13,16 @@
 
 // Shaders code
 const GLchar* vertexShaderSource = "#version 330 core\n"
-"layout (location = 0) in vec3 position;\n"
+"layout (location = 0) in vec3 position;\n"//VEC3 VECTOR DE 3 ELEMENTOS
 "void main()\n"
 "{\n"
-"gl_Position = vec4(position, 1.0);\n"
+"gl_Position = vec4(position, 1.0);\n"// AGREGA UN VECTOR MAS, COORDENADAS HOMOGENEAS
 "}\0";
-const GLchar* fragmentShaderSource = "#version 330 core\n"
-"out vec4 color;\n"
+const GLchar* fragmentShaderSource = "#version 330 core\n"// INICIAR CON LA VERSION
+"out vec4 color;\n"//AGREGAR UN COLOR
 "void main()\n"
 "{\n"
-"color = vec4(0.3f, 0.6f, 0.9f, 1.0f);\n"
+"color = vec4(1f, 0.0f, 1.0f, 1.0f);\n"
 "}\n\0";
 
 GLuint VBO, VAO;
@@ -100,13 +100,13 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	// Build and compile our shader program
 	// Vertex shader
-	vertexShader = glCreateShader(GL_VERTEX_SHADER);
+	vertexShader = glCreateShader(GL_VERTEX_SHADER);//SE CREA UN SHADER DE VERTICES, CREA UN ID
 	glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
 	glCompileShader(vertexShader);
 	// Check for compile time errors
 	GLint success;
 	GLchar infoLog[512];
-	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);//CHECA ERRORES
 	if (!success) {
 		glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << infoLog
@@ -117,7 +117,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
 	glCompileShader(fragmentShader);
 	// Check for compile time errors
-	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);
+	glGetShaderiv(fragmentShader, GL_COMPILE_STATUS, &success);// CHECA ERRORES
 	if (!success) {
 		glGetShaderInfoLog(fragmentShader, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED\n" << infoLog
@@ -127,9 +127,10 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	shaderProgram = glCreateProgram();
 	glAttachShader(shaderProgram, vertexShader);
 	glAttachShader(shaderProgram, fragmentShader);
-	glLinkProgram(shaderProgram);
+	glLinkProgram(shaderProgram);//LIMPIA EL SHADER
 	// Check for linking errors
-	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+	glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);// CREA EL SHADER
+	// NECSITAMOS EL CODIGO FUENTE, ASOCIARLO, COMPILARLO, CREAR EL PROGRAMA DONDE SE EJECUTARA, ...
 	if (!success) {
 		glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog
@@ -137,7 +138,8 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	}
 
 	// Vertex data
-	GLfloat vertices[] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f };
+	GLfloat vertices[] = { -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.5f, 0.5f, 0.0f, 0.5f ,0.5f ,0.0f,-0.5f,0.5f,0.0f,-0.5f,-0.5f,0.0f };//VERTICES A DIBUJAR, DE TRES EN TRES CADA VERTICE	
+
 
 	// Create Buffers and attributes vertex.
 	glGenVertexArrays(1, &VAO);
@@ -145,9 +147,9 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glBindVertexArray(VAO);
 
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);// bandera que indica qu los datos no cambian, se le para el vertice y el apuntador
 
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat),//size of regresa el tamaño de el bit * cada flotante, 4*9
 		(GLvoid*)0);
 	glEnableVertexAttribArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -237,7 +239,7 @@ void applicationLoop() {
 		// Draw our first triangle
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);

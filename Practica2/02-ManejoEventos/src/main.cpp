@@ -19,6 +19,8 @@ GLFWwindow * window;
 bool exitApp = false;
 int lastMousePosX;
 int lastMousePosY;
+//*////////////////////
+bool isBlue = true;
 
 double deltaTime;
 
@@ -63,7 +65,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	glfwMakeContextCurrent(window);
 	glfwSwapInterval(0);
-
+	//Esta parte es paa indicarle las funciones que se van a ejecutar cuando suceda un evento.
 	glfwSetWindowSizeCallback(window, reshapeCallback);
 	glfwSetKeyCallback(window, keyCallback);
 	glfwSetCursorPosCallback(window, mouseCallback);
@@ -90,25 +92,32 @@ void destroy() {
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes) {
 	screenWidth = widthRes;
 	screenHeight = heightRes;
-	glViewport(0, 0, widthRes, heightRes);
+	glViewport(0, 0, widthRes, heightRes);//cambia la zona de dibujo
 }
 
-void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {
+void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode) {// en que ventana sucedio el evento y que fue presionado y cual fue la accion
 	if (action == GLFW_PRESS) {
 		switch (key) {
-		case GLFW_KEY_ESCAPE:
-			exitApp = true;
+		case GLFW_KEY_ESCAPE://indica que fue la tecla scale
+			exitApp = true;//hace salir de la ventana
+			break;
+		case GLFW_KEY_B:
+			isBlue = true;
+			break;
+		case GLFW_KEY_R:
+			isBlue = false;
 			break;
 		}
 	}
 }
 
-void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+void mouseCallback(GLFWwindow* window, double xpos, double ypos) {//recibe la ventana donde recibio el evento el x y y del la posicion del mouse
 	lastMousePosX = xpos;
-	lastMousePosY = ypos;
+	lastMousePosY = ypos;// posiciones el mouse
 }
 
 void mouseButtonCallback(GLFWwindow* window, int button, int state, int mod) {
+	// los estados son GLFW_PRESS, GLFW_REPETE, GLFW_RELEASE.
 	if (state == GLFW_PRESS) {
 		switch (button) {
 		case GLFW_MOUSE_BUTTON_RIGHT:
@@ -139,6 +148,11 @@ void applicationLoop() {
 	while (psi) {
 		psi = processInput(true);
 		glClear(GL_COLOR_BUFFER_BIT);
+		if (isBlue)
+			glClearColor(0.0, 0.0, 1.0, 1.0);
+		else 
+			glClearColor(1.0, 0.0, 0.0, 1.0);
+
 		glfwSwapBuffers(window);
 	}
 }

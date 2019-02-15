@@ -30,18 +30,18 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	screenWidth = width;
 	screenHeight = height;
 
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);//
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);//version de ópen gl
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);//ultimas tecnicas de renderizacion
 
-	if (bFullScreen)
-		window = glfwCreateWindow(width, height, strTitle.c_str(),
+	if (bFullScreen)// abarca toda la pantalla
+		window = glfwCreateWindow(width, height, strTitle.c_str(),//sino abarca el a y l de la pantalla
 			glfwGetPrimaryMonitor(), nullptr);
 	else
 		window = glfwCreateWindow(width, height, strTitle.c_str(), nullptr,
 			nullptr);
 
-	if (window == nullptr) {
+	if (window == nullptr) {//revisar que este objeto sea diferente de null, nullptr= apuntador en cero
 		std::cerr
 			<< "Error to create GLFW window, you can try download the last version of your video card that support OpenGL 3.3+"
 			<< std::endl;
@@ -94,7 +94,7 @@ void applicationLoop() {
 }
 
 int main(int argc, char ** argv) {
-	init(800, 700, "Window GLFW", false);
+	init(400, 700, "Mi primer programa", false);
 	applicationLoop();
 	destroy();
 	return 1;
