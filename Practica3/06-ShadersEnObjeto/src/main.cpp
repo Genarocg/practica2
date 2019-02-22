@@ -97,6 +97,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	//los atributos son las rutas relativas de los arvchivos donde estan
 	//almacenados los shaders
 	// el primer nombre del archivo es shader de vertices, y el segundo shaders de fragmento
+
 	// This is for the render with index element
 	Vertex vertices[] =
 	{
@@ -223,7 +224,7 @@ void applicationLoop() {
 		
 
 		//este metodo sirve para activar los shaders que deseemos utilizar
-		//shader.turnOn();
+		shader.turnOn();
 
 		glBindVertexArray(VAO);
 		// This is for the render with index element
@@ -232,7 +233,7 @@ void applicationLoop() {
 
 
 		//Este es para desactivar el uso del shader.
-		//shader.turnOff();
+	    shader.turnOff();
 
 		glfwSwapBuffers(window);
 	}

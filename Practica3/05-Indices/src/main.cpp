@@ -63,6 +63,7 @@ void destroy();
 bool processInput(bool continueApplication = true);
 void creaRect();
 void creaEstrella();
+
 // Implementacion de todas las funciones.
 void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	
@@ -150,6 +151,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog
 			<< std::endl;
 	}
+
 	/*
 	// This is for the render with index element
 	Vertex vertices[] =
@@ -290,6 +292,7 @@ void creaRect() {
 	glBindVertexArray(0);//volver a configuracion inicial
 
 };
+
 void destroyWindow() {
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -378,11 +381,13 @@ void applicationLoop() {
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
 		// This is for the render with index element
+
 		//eSTO ES PARA DIBUJAR CON INDICES
 		//parametros: primitiva, numero de indices, tiop de dato, apuntador al inicio de los datos.
 glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
 //eSTO ES PARA DIBUJAR SIN INDICES
 //glDrawArrays(GL_TRIANGLES, 0, 4);
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);

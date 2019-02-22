@@ -38,6 +38,8 @@ int lastMousePosY;
 
 double deltaTime;
 
+float fovy = 0.0;
+
 // Se definen todos las funciones.
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
@@ -97,6 +99,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	//define la zona de dibujo que deseamos a utilizar
 	// parametros: inicial en x, inciial en y, el ancho y altode la zona de dibujo.
 	glViewport(0, 0, screenWidth, screenHeight);//para el puerto de vista, el cuanto de pantalla ocupamos.
+
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	glEnable(GL_DEPTH_TEST);
@@ -190,6 +193,9 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		case GLFW_KEY_ESCAPE:
 			exitApp = true;
 			break;
+		case GLFW_KEY_1:
+			fovy += 1.0;
+			break;
 		}
 	}
 }
@@ -229,8 +235,6 @@ void applicationLoop() {
 	bool psi = true;
 	double lastTime = TimeManager::Instance().GetTime();
 
-	float fovy = 0;
-
 	glm::vec3 cubePositions[] =
 	{	glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-2.0f, -5.0f, -15.0f),
 		glm::vec3(-1.5f, 2.2f, -2.5f), glm::vec3(1.8f, 1.0f, -12.3f),
@@ -252,6 +256,7 @@ void applicationLoop() {
 		GLint projLoc = shader.getUniformLocation("projection");
 
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -7.0f));
+
 		//glm::mat4 projection = glm::perspective(glm::radians(45.0f), 
 			//(float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		//glm::mat4 crea una matriz de 4x4
@@ -265,9 +270,10 @@ void applicationLoop() {
 		//glm::pespective crea una proyeccion de perspectiva que cambia respecto a las dimensiones de la ventana
 		//cambiar entre cada proyeccion
 		//y aumentar y bajar el radio de distancia 
-		glm::mat4 projection = glm::perspective(glm::radians(45.0f), 
+		glm::mat4 projection = glm::perspective(glm::radians(fovy), 
 			(float)(screenWidth/screenHeight),
 			0.01f, 100.0f);
+
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 

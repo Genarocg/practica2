@@ -1,6 +1,7 @@
 //glew include
 #include <GL/glew.h>
-
+//incluir math
+#include <math.h>
 //std includes
 #include <string>
 #include <iostream>
@@ -36,8 +37,7 @@ const GLchar* fragmentShaderSource = { "#version 400\n"
 
 bool render1 = true;
 
-
-GLuint VBO, VAO,VBO2,VAO2;// crear otra instancia
+GLuint VBO, VAO, VBO2, VAO2;// crear otra instancia
 GLint vertexShader, fragmentShader, shaderProgram;
 
 typedef struct {
@@ -62,14 +62,13 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void mouseButtonCallback(GLFWwindow* window, int button, int state, int mod);
 void init(int width, int height, std::string strTitle, bool bFullScreen);
-void crearect();
 void destroyWindow();
 void destroy();
 bool processInput(bool continueApplication = true);
 
 // Implementacion de todas las funciones.
 void init(int width, int height, std::string strTitle, bool bFullScreen) {
-	
+
 	if (!glfwInit()) {
 		std::cerr << "Failed to initialize GLFW" << std::endl;
 		exit(-1);
@@ -115,7 +114,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	}
 
 	glViewport(0, 0, screenWidth, screenHeight);
-	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
+	glClearColor(0.0f, 1.0f, 1.0f, 1.0f);
 
 	// Build and compile our shader program
 	// Vertex shader
@@ -156,21 +155,323 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	}
 
 	Vertex vertices[] =
-	{
-		{ {-0.8f, -0.5f, 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
-		{ { 0.5f, -0.5f, 0.0f } ,{ 0.0f, 1.0f, 0.0f } },
-		{ { 0.0f,  0.5f, 0.0f } ,{ 0.0f, 0.0f, 1.0f } }
+	{//cuadro de la casa
+		{ { -0.3f, -0.9f, 0.0f } ,{ 0.6f, 0.9f, 1.1f } },
+	{ { 0.3f, -0.9f, 0.0f } ,{ 0.6f, 0.9f, 1.1f } },
+	{ { 0.3f,  -0.1f, 0.0f } ,{ 0.6f, 0.9f, 1.1f } },
+	{ { -0.3f, -0.9f, 0.0f } ,{ 0.6f, 0.9f, 1.1f } },
+	{ { 0.3f,  -0.1f, 0.0f } ,{ 0.6f, 0.9f, 1.1f } },
+	{ { -0.3f,  -0.1f, 0.0f } ,{ 0.6f, 0.9, 1.1f } },
+	//techo
+	{ { -0.3f,  -0.08f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { 0.3f,   -0.08f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { -0.03f, 0.4f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	//cuadro extra para darle forma de la imagen al techo
+	{ { -0.3f,  -0.1f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { 0.3f,   -0.1f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { 0.3f, -0.08f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { -0.3f,  -0.1f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { 0.3f,   -0.08f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	{ { -0.3f, -0.08f, 0.0f } ,{ 1.0f,  0.7f, 0.5f } },
+	//rectangulo bajo el techo
+	{ { -0.3f, -0.21f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.3f,  -0.21f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.3f,  -0.1f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.3f, -0.21f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.3f,  -0.1f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.3f, -0.1f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo encima del techo (izquierdo)
+	{ { -0.35f, -0.11f,0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.32f, -0.11f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.4f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.35f, -0.11f,0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.4f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.44f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	//triangulo encima del techo (derecho)
+	{ { 0.35f, -0.11f,0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { 0.32f, -0.11f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.4f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { 0.35f, -0.11f,0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.4f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	{ { -0.03f, 0.44f, 0.0f } ,{ 1.0f,0.0f,0.0f } },
+	//puerta (primer rectangulo).
+	{ { -0.25f,-0.9f,0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	{ { -0.05f,-0.9f,0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	{ { -0.05f, -0.3f,0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	{ { -0.25f,-0.9f,0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	{ { -0.25f,-0.3f, 0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	{ { -0.05f, -0.3f, 0.0f } ,{ 0.9f, 0.4, 0.0f } },
+	//segundo rectangulo de la puerta.
+	{ { -0.22f,-0.87f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.07f, -0.87f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.07f, -0.35f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.22f, -0.87f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.22f, -0.35f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.07f,-0.35f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//ventana techo (primer cuadro)
+	{ { -0.06f,0.05f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.01f, 0.05f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.01f, 0.2f,0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { -0.06f, 0.05f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.01f, 0.2f,0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { -0.06f, 0.2f,0.0f } ,{ 1.0f, 1.0f, 1.0f } },
+	//segundo cuadro de la ventana
+	{ { -0.0515f, 0.059f,0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+	{ { 0.003f, 0.059f, 0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+	{ { 0.003f, 0.19f,0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+	{ { -0.0515f, 0.059f, 0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+	{ { 0.003f, 0.19f, 0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+	{ { -0.0515f,0.19f,0.0f } ,{ 0.0f, 0.8f, 1.0f } },
+
+	//piso, primera linea
+	{ { -0.7f,-0.92f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f,-0.92f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f, -0.9f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.7f, -0.92f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f, -0.9,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.7f, -0.9f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	//contorno ventana  M
+	{ { 0.02f,-0.72f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.22f,-0.72f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.22f, -0.31f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.02f,-0.72f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.22f,-0.31f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.02f, -0.31f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//contorno ventana interior
+	{ { 0.033f,-0.7f,0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	{ { 0.21f,-0.7f,0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	{ { 0.21f, -0.33f,0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	{ { 0.033f,-0.7f,0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	{ { 0.21f,-0.33f, 0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	{ { 0.033f, -0.33f, 0.0f } ,{ 0.0f, 0.5, 1.0f } },
+	//linea horizontal en la ventana
+	{ { 0.033f,-0.42f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.21f,-0.42f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.21f, -0.45f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.033f,-0.42f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.21f,-0.45f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.033f, -0.45f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//linea vertical dentro de la ventana
+	{ { 0.105f,-0.45f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.13f,-0.45f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.13f, -0.7f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.105f,-0.45f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.13f,-0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.105f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//base de la ventana
+	{ { -0.01f,-0.72f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.25f, -0.72f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.25f, -0.78f,0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { -0.01f, -0.72f, 0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { 0.25f, -0.78f,0.0f } ,{ 1.0f,   1.0f, 1.0f } },
+	{ { -0.01f, -0.78f,0.0f } ,{ 1.0f, 1.0f, 1.0f } },
+	//base chimenea
+	{ { 0.135f,0.2f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.22f, 0.2f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.22f, 0.3f,0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.135f, 0.2f,0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.22f, 0.3f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.135f,0.3f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	//gorrito de la chimenea
+	{ { 0.1f,0.3f, 0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	{ { 0.25f, 0.3f, 0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	{ { 0.25f, 0.37f,0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	{ { 0.1f, 0.3f,0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	{ { 0.25f, 0.37f, 0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	{ { 0.1f,0.37f, 0.0f } ,{ 1.0f,   0.0f, 0.0f } },
+	//triangulo base
+	{ { 0.135f,0.2f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.22f, 0.2f, 0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	{ { 0.22f, 0.08f,0.0f } ,{ 0.9f,   0.0f, 0.3f } },
+	//linea derecha de la cerca
+	{ { 0.3f,-0.72f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f,-0.72f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f, -0.74f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.3f, -0.72f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.7f, -0.74,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { 0.3f, -0.74f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	//linea cerca izquierda
+	{ { -0.3f,-0.72f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.7f,-0.72f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.7f, -0.74f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.3f, -0.72f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.7f, -0.74f,0.0f },{ 0.6f,   0.0f, 0.0f } },
+	{ { -0.3f, -0.74f, 0.0f },{ 0.6f,   0.0f, 0.0f } },
+	//rectangulo de una cerca
+	{ { 0.33f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.36f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.36f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.33f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.36f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.33f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { 0.33f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.36f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.345f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+
+	/*********************************CERCA******************************************/
+	{ { 0.39f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.42f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.42f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.39f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.42f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.39f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { 0.39f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.42f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.405f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/******************************/
+	{ { 0.45f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.48f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.48f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.45f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.48f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.45f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { 0.45f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.48f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.465f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/********************************************/
+	{ { 0.51f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.54f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.54f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.51f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.54f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.51f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { 0.51f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.54f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.525f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/*********************************************/
+	{ { 0.57f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.60f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.60f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.57f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.60f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.57f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { 0.57f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.60f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { 0.585f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	//cerca izquierda
+	//rectangulo de una cerca
+	{ { -0.33f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.36f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.36f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.33f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.36f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.33f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { -0.33f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.36f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.345f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },/**/
+
+
+	{ { -0.39f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.42f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.42f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.39f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.42f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.39f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { -0.39f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.42f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.405f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/******************************/
+	{ { -0.45f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.48f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.48f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.45f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.48f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.45f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { -0.45f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.48f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.465f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/********************************************/
+	{ { -0.51f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.54f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.54f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.51f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.54f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.51f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { -0.51f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.54f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.525f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	/*********************************************/
+	{ { -0.57f,-0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.60f, -0.92f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.60f, -0.70f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.57f, -0.92f,0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.60f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.57f, -0.7f, 0.0f } ,{ 1.0f,   0.6f, 0.5f } },
+	//triangulo sobre la cerca
+	{ { -0.57f, -0.7f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.60f, -0.7f,0.0f },{ 1.0f,   0.6f, 0.5f } },
+	{ { -0.585f, -0.65f, 0.0f },{ 1.0f,   0.6f, 0.5f } },
+
+	//Creando perilla
+
+	{ { -0.105f, -0.6f, 0.0f } ,{ 0.0f,   0.0f, 0.0f } },
+	{ { -0.09f, -0.6f, 0.0f } ,{ 0.0f,   0.0f, 0.0f } },
+	{ { -0.09f, -0.625f, 0.0f } ,{ 0.0f,   0.0f, 0.0f } },
+	{ { -0.105f, -0.6f, 0.0f } ,{ 0.0f,   0.0f, 0.0f } },
+	{ { -0.09f, -0.625f, 0.0f },{ 0.0f,   0.0f, 0.0f } },
+	{ { -0.105f, -0.625f, 0.0f } ,{ 0.0f,   0.0f, 0.0f } }
+
+
 	};//18*4
 	Vertex vertices2[] =
 	{
-	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
-	{ { 1.0f, 0.0f, 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
-	{ { 1.0f, 1.0f, 0.0f } ,{ 1.0f, 0.0f, 0.0f } }
+		//norte
+		{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, 0.45f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { 0.09f, 0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, 0.45f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { -0.09f, 0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+
+	{ { -0.09f, 0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.09f, 0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.0f, 0.6f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	//sur
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, -0.45f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { 0.09f, -0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.0f, -0.45f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { -0.09f, -0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+
+	{ { -0.09f, -0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.09f, -0.45f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.0f, -0.6f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	//Este
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.35f, 0.0, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { 0.35f, -0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { 0.35f, 0.0f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { 0.35f, 0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+
+	{ { 0.35f, 0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.35f, -0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { 0.45f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	//Oeste
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { -0.35f, 0.0f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { -0.35f, -0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+	{ { 0.0f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
+	{ { -0.35f, 0.0f, 0.0f } ,{ 1.0f, 0.8f, 0.0f } },
+	{ { -0.35f, 0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.0f } },
+
+	{ { -0.35f, -0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { -0.35f, 0.13f, 0.0f } ,{ 0.9f, 0.9f, 0.8f } },
+	{ { -0.45f, 0.0f, 0.0f } ,{ 1.0f, 1.0f, 0.0f } },
 	};
 
 	/*ertex Cuadrobase[] =
 	{
-
 	};*/
 	const size_t bufferSize = sizeof(vertices);//18*4 bytes
 	const size_t vertexSize = sizeof(vertices[0]);//6*4
@@ -224,24 +525,6 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glBindVertexArray(0);
 
 }
-void crearect() {
-	Vertex vertices []= {
-	
-	//arreglo
-
-		const size_t VertexSize = sizeof(vertices);
-	const size_t StrideSize = sizeof(vertices[0]);
-	const size_t OffsetPos = sizeof(vertices[0].XYZ);
-	glGenVertexArrays(1, &VAO);
-	glBindVertexArray(VAO);
-	
-	glGenBuffers(1, &VBO);
-	glBindBuffer(GL_ARRAY_BUFFER, VBO);
-
-	glBufferData(GL_ARRAY_BUFFER, VertexSize, vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FLASE, , );
-	};
-}
 
 void destroyWindow() {
 	glfwDestroyWindow(window);
@@ -282,10 +565,10 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 		case GLFW_KEY_ESCAPE:
 			exitApp = true;
 			break;
-		case GLFW_KEY_F:
+		case GLFW_KEY_C:
 			render1 = true;
 			break;
-		case GLFW_KEY_S:
+		case GLFW_KEY_E:
 			render1 = false;
 			break;
 		}
@@ -314,7 +597,7 @@ void mouseButtonCallback(GLFWwindow* window, int button, int state, int mod) {
 	}
 }
 
-bool processInput(bool continueApplication){
+bool processInput(bool continueApplication) {
 	if (exitApp || glfwWindowShouldClose(window) != 0) {
 		return false;
 	}
@@ -329,18 +612,21 @@ void applicationLoop() {
 		psi = processInput(true);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		
+		glClearColor(1.0f, 1.0f, 0.8f, 0.0f);
+
 		glUseProgram(shaderProgram);
 		if (render1)
 		{
 			glBindVertexArray(VAO);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawArrays(GL_TRIANGLES, 0, 216);
 			//si queremos dibujar más triangulos debemos cambiar el 3, por el numero de vertices.
+
 		}
 		else {
+
+			glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
 			glBindVertexArray(VAO2);
-			glDrawArrays(GL_TRIANGLES, 0, 3);
+			glDrawArrays(GL_TRIANGLES, 0, 36);
 		}
 		glBindVertexArray(0);
 
@@ -349,9 +635,8 @@ void applicationLoop() {
 }
 
 int main(int argc, char ** argv) {
-	init(1550, 850, "Window GLFW", false);
+	init(1100, 650, "Window GLFW", false);
 	applicationLoop();
 	destroy();
 	return 1;
 }
-
