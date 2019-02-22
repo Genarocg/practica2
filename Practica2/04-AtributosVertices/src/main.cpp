@@ -62,6 +62,7 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 void mouseCallback(GLFWwindow* window, double xpos, double ypos);
 void mouseButtonCallback(GLFWwindow* window, int button, int state, int mod);
 void init(int width, int height, std::string strTitle, bool bFullScreen);
+void crearect();
 void destroyWindow();
 void destroy();
 bool processInput(bool continueApplication = true);
@@ -222,6 +223,24 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 
+}
+void crearect() {
+	Vertex vertices []= {
+	
+	//arreglo
+
+		const size_t VertexSize = sizeof(vertices);
+	const size_t StrideSize = sizeof(vertices[0]);
+	const size_t OffsetPos = sizeof(vertices[0].XYZ);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+	
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, VertexSize, vertices, GL_STATIC_DRAW);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FLASE, , );
+	};
 }
 
 void destroyWindow() {

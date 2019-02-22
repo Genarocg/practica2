@@ -61,7 +61,8 @@ void init(int width, int height, std::string strTitle, bool bFullScreen);
 void destroyWindow();
 void destroy();
 bool processInput(bool continueApplication = true);
-
+void creaRect();
+void creaEstrella();
 // Implementacion de todas las funciones.
 void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	
@@ -149,7 +150,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "ERROR::SHADER::PROGRAM::LINKING_FAILED\n" << infoLog
 			<< std::endl;
 	}
-
+	/*
 	// This is for the render with index element
 	Vertex vertices[] =
 	{
@@ -196,8 +197,99 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER,0);
+	*/
+	//creaRect();
+	creaEstrella();
 }
 
+void creaEstrella() {
+	Vertex vertices[] = {
+		//centro de la estrella
+		{{0.0f,0.0f,0.0f} ,{1.0f,1.0f,1.0f} },
+		//Parte de arriba
+
+
+		{ { -0.2f, 0.8f, 0.0f } ,{ 0.0f,1.0f, 0.0f } },
+	{ { 0.2f , 0.8f, 0.0f } ,{ 0.0f, 0.0f, 1.0f } },
+	{ { 0.0f , 0.8f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },
+	{ { 0.0f ,  1.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
+	};
+
+	GLuint indices[] = {
+		//TOP parte de arriba
+		0, 3, 1,
+		0, 2, 3,
+		3, 4, 1,
+		3, 2, 4 
+
+	};
+	const size_t VertexSize = sizeof(vertices);
+	const size_t StrideSize = sizeof(vertices[0]);
+	const size_t OffsetPos = sizeof(vertices[0].XYZ);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, VertexSize, vertices, GL_STATIC_DRAW);
+
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, StrideSize, 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, StrideSize, (GLvoid*)OffsetPos);
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);//volver a configuracion inicial
+
+
+}
+
+void creaRect() {
+	Vertex vertices[] = {
+		//centro
+
+
+	{ { -0.5f, -0.5f, 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
+	{ { 0.5f , -0.5f, 0.0f } ,{ 0.0f, 1.0f, 0.0f } },
+	{ { 0.5f , 0.5f , 0.0f } ,{ 0.0f, 0.0f, 1.0f } },
+	{ { -0.5f , 0.5f , 0.0f } ,{ 1.0f, 0.0f, 1.0f } },
+	};
+
+	GLuint indices[] = {
+
+		0, 1, 2,
+		0, 2, 3
+
+	};
+		const size_t VertexSize = sizeof(vertices);
+	const size_t StrideSize = sizeof(vertices[0]);
+	const size_t OffsetPos = sizeof(vertices[0].XYZ);
+	glGenVertexArrays(1, &VAO);
+	glBindVertexArray(VAO);
+
+	glGenBuffers(1, &VBO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+
+	glBufferData(GL_ARRAY_BUFFER, VertexSize, vertices, GL_STATIC_DRAW);
+	
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, StrideSize , 0);
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, StrideSize, (GLvoid*)OffsetPos);
+	
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+
+	glGenBuffers(1, &EBO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+
+	glBindVertexArray(0);//volver a configuracion inicial
+
+};
 void destroyWindow() {
 	glfwDestroyWindow(window);
 	glfwTerminate();
@@ -281,12 +373,16 @@ void applicationLoop() {
 		glClear(GL_COLOR_BUFFER_BIT);
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
-		
+
 		// Draw our first triangle
 		glUseProgram(shaderProgram);
 		glBindVertexArray(VAO);
 		// This is for the render with index element
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+		//eSTO ES PARA DIBUJAR CON INDICES
+		//parametros: primitiva, numero de indices, tiop de dato, apuntador al inicio de los datos.
+glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+//eSTO ES PARA DIBUJAR SIN INDICES
+//glDrawArrays(GL_TRIANGLES, 0, 4);
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);

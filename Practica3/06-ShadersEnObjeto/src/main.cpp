@@ -12,7 +12,7 @@
 #include "Headers/TimeManager.h"
 #include "Headers/Shader.h"
 
-Shader shader;
+Shader shader;//instancia el objeto shader
 
 GLuint VBO, VAO, EBO;
 
@@ -93,7 +93,10 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	glClearColor(0.0f, 0.0f, 0.4f, 0.0f);
 
 	shader.initialize("../../Shaders/basic.vs", "../../Shaders/basic.fs");
-
+	//inicializar los shaders de vertices y fragmentos
+	//los atributos son las rutas relativas de los arvchivos donde estan
+	//almacenados los shaders
+	// el primer nombre del archivo es shader de vertices, y el segundo shaders de fragmento
 	// This is for the render with index element
 	Vertex vertices[] =
 	{
@@ -218,14 +221,18 @@ void applicationLoop() {
 
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 		
-		shader.turnOn();
+
+		//este metodo sirve para activar los shaders que deseemos utilizar
+		//shader.turnOn();
 
 		glBindVertexArray(VAO);
 		// This is for the render with index element
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 		glBindVertexArray(0);
 
-		shader.turnOff();
+
+		//Este es para desactivar el uso del shader.
+		//shader.turnOff();
 
 		glfwSwapBuffers(window);
 	}
