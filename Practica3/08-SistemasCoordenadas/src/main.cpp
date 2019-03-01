@@ -19,7 +19,9 @@
 #include <glm/gtc/type_ptr.hpp>
 
 Shader shader;
-
+bool vista1 = true;
+bool vista2 = false;
+bool vista3 = false;
 GLuint VBO, VAO, EBO;
 struct Vertex {
 	glm::vec3 m_Pos;
@@ -39,6 +41,8 @@ int lastMousePosY;
 double deltaTime;
 
 float fovy = 0.0;
+double fovy2 = 0.0;
+double fovy3 = 0.0;
 
 // Se definen todos las funciones.
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes);
@@ -195,7 +199,28 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 			break;
 		case GLFW_KEY_1:
 			fovy += 1.0;
+			fovy2 += 2.0;
 			break;
+		case GLFW_KEY_2:
+			fovy -= 1.0;
+			fovy2 -= 2.0;
+			break;
+		case GLFW_KEY_O:
+			vista1 = true;
+			vista2 = false;
+			vista3 = false;
+			break;
+		case GLFW_KEY_F:
+			vista1 = false;
+			vista2 = true;
+			vista3 = false;
+			break;
+		case GLFW_KEY_P:
+			vista1 = false;
+			vista2 = false;
+			vista3 = true;
+			break;
+
 		}
 	}
 }
@@ -245,7 +270,7 @@ void applicationLoop() {
 
 	while (psi) {
 		psi = processInput(true);
-		
+
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
 
@@ -256,26 +281,45 @@ void applicationLoop() {
 		GLint projLoc = shader.getUniformLocation("projection");
 
 		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -7.0f));
+		/***********************************************************************************/
+		if (vista1) {
 
-		//glm::mat4 projection = glm::perspective(glm::radians(45.0f), 
+			//glm::mat4 projection = glm::perspective(glm::radians(45.0f), 
 			//(float)screenWidth / (float)screenHeight, 0.1f, 100.0f);
 		//glm::mat4 crea una matriz de 4x4
 		//glm::ortho crea una matriz de proyeccion ortogonal
 		//parametros: plano izquierdo, plano, derecho, ´plano abajo, plano arriba, plano cercano y plano lejano.
-		//glm::mat4 projection = glm::ortho(-4.0, 4.0, -4.0, 4.0, 0.01, 100.0);
-		//glm::frustrum crea una matriz de proyeccion de pespectiva y los parametros son 
-		//parametros: plano izquierdo, plano, derecho, ´plano abajo, plano arriba, plano cercano y plano lejano.
+			glm::mat4 projection = glm::ortho(-4.0, 4.0, -4.0, 4.0, 0.01, fovy2);
+			glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
 
-//		glm::mat4 projection = glm::frustum(-0.005, 0.005, -0.005, 0.005, 0.01, 100.0);
-		//glm::pespective crea una proyeccion de perspectiva que cambia respecto a las dimensiones de la ventana
+		}
+		if (vista2) 
+		{
+				//glm::frustrum crea una matriz de proyeccion de pespectiva y los parametros son 
+				//parametros: plano izquierdo, plano, derecho, ´plano abajo, plano arriba, plano cercano y plano lejano.
+				glm::mat4 projection = glm::frustum(-0.005, 0.005, -0.005, 0.005, 0.01, fovy2);
+				glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+		}
+		if (vista3) {
+
+
+			//glm::pespective crea una proyeccion de perspectiva que cambia respecto a las dimensiones de la ventana
 		//cambiar entre cada proyeccion
 		//y aumentar y bajar el radio de distancia 
 		glm::mat4 projection = glm::perspective(glm::radians(fovy), 
 			(float)(screenWidth/screenHeight),
 			0.01f, 100.0f);
-
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 		glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
+		}
+
+		
+
+
+		
 
 		glBindVertexArray(VAO);
 		for (GLuint i = 0; i < 10; i++) {

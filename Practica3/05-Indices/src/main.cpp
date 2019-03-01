@@ -207,14 +207,29 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 void creaEstrella() {
 	Vertex vertices[] = {
 		//centro de la estrella
-		{{0.0f,0.0f,0.0f} ,{1.0f,1.0f,1.0f} },
-		//Parte de arriba
+	{{0.0f,0.0f,0.0f} ,{1.0f,1.0f,1.0f} },//0
+	//Parte de arriba
+	{ { -0.2f, 0.8f, 0.0f } ,{ 0.0f,1.0f, 0.0f } },//1
+	{ { 0.2f , 0.8f, 0.0f } ,{ 0.0f, 0.0f, 1.0f } },//2
+	{ { 0.0f , 0.8f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },//3
+	{ { 0.0f ,  1.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },//4
+	//parte baja de la estrella
+	{ {-0.2f, -0.8f, 0.0f } , {0.0f, 1.0f, 0.0f } },//5
+	{ {0.2f, -0.8f, 0.0f } , {0.0f, 0.0f, 1.0f } },//6
+	{ { 0.0f , -0.8f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },//7
+	{ { 0.0f ,  -1.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },//8
+	//PARTE IZQUIERDA DE LA ESTRELLA
+	{ {-0.8f, 0.2f, 0.0f } , {0.0f, 1.0f, 0.0f } },//9
+	{ {-0.8f, -0.2f, 0.0f } , {0.0f, 0.0f, 1.0f } },//10
+	{ { -0.8f , 0.0f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },//11
+	{ { -1.0f ,  0.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },//12
 
+	//PARTE DERECHA DE LA ESTRELLA
+	{ {0.8f, -0.2f, 0.0f } , {0.0f, 1.0f, 0.0f } },//13
+	{ {0.8f, 0.2f, 0.0f } , {0.0f, 0.0f, 1.0f } },//14
+	{ { 0.8f , 0.0f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },//15
+	{ { 1.0f ,  0.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },//16
 
-		{ { -0.2f, 0.8f, 0.0f } ,{ 0.0f,1.0f, 0.0f } },
-	{ { 0.2f , 0.8f, 0.0f } ,{ 0.0f, 0.0f, 1.0f } },
-	{ { 0.0f , 0.8f , 0.0f } ,{ 0.0f, 1.0f, 1.0f } },
-	{ { 0.0f ,  1.0f , 0.0f } ,{ 1.0f, 0.0f, 0.0f } },
 	};
 
 	GLuint indices[] = {
@@ -222,7 +237,19 @@ void creaEstrella() {
 		0, 3, 1,
 		0, 2, 3,
 		3, 4, 1,
-		3, 2, 4 
+		3, 2, 4,
+		5, 7, 0,
+		7, 6, 0,
+		8, 7, 5,
+		6, 7, 8,
+		11, 10, 0,
+		9, 11, 0, 
+		12, 10, 11,
+		12, 11, 9,
+		0, 13, 15,
+		0, 15, 14, 
+		13, 16, 15,
+		15, 16, 14
 
 	};
 	const size_t VertexSize = sizeof(vertices);
@@ -384,7 +411,7 @@ void applicationLoop() {
 
 		//eSTO ES PARA DIBUJAR CON INDICES
 		//parametros: primitiva, numero de indices, tiop de dato, apuntador al inicio de los datos.
-glDrawElements(GL_TRIANGLES, 12, GL_UNSIGNED_INT, 0);
+glDrawElements(GL_TRIANGLES, 48, GL_UNSIGNED_INT, 0);
 //eSTO ES PARA DIBUJAR SIN INDICES
 //glDrawArrays(GL_TRIANGLES, 0, 4);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
