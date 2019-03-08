@@ -1,7 +1,7 @@
 #ifndef BOX_H
 #define BOX_H
 #include "Abstractmodel.h"
-
+//no recibe nada, caja de unidades unitarias
 class Box : public AbstractModel
 {
 public:
