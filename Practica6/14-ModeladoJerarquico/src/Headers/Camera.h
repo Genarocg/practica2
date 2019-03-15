@@ -19,6 +19,9 @@ public:
 	virtual void updateCamera() = 0;
 	glm::mat4 getViewMatrix() {
 		return glm::lookAt(position, position + front, up);
+		//crea sisteema de refrencia que sn perpendiculares
+		//parametros direccion y vector que mira, vector u de la camara, regresa matriz de 4x4
+
 	}
 
 	void setPosition(glm::vec3 position) {

@@ -20,11 +20,13 @@
 #include "Headers/Sphere.h"
 #include "Headers/Cylinder.h"
 #include "Headers/Box.h"
-
+//camara include
+#include "Headers/FirstPersonCamera.h"
 Sphere sphere(20, 20);
 Cylinder cylinder(20, 20, 0.5, 0.5);
 Cylinder cylinder2(20, 20, 0.5, 0.5);
 Box box;
+std::shared_ptr<FirstPersonCamera>camera(new FirstPersonCamera());
 
 Shader shader;
 
@@ -34,10 +36,18 @@ int screenHeight;
 GLFWwindow * window;
 
 bool exitApp = false;
-int lastMousePosX;
-int lastMousePosY;
+int lastMousePosX, offsetx;
+int lastMousePosY, offsety;
+float rot1, rot2, rot3, rot11, rot22, rot33 = 0.0;
 
 double deltaTime;
+//se crea una camara
+//vector a la camara, derecha y arriba
+//primero se fija un vector para el sistema del mono
+//nos desplazamos hacia el vector fonto (frente)
+//metodo update camera nos dice en que camara esta mos ocupando
+//calclar el vector de hace vector crus y punto
+
 
 // Se definen todos las funciones.
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes);
@@ -118,7 +128,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	box.init();
 	box.setShader(&shader);
 	box.setColor(glm::vec3(0.2, 0.8, 0.4));
-
+	//camera->setSensitivity(1.0);
 }
 
 void destroyWindow() {
@@ -152,6 +162,8 @@ void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
 }
 
 void mouseCallback(GLFWwindow* window, double xpos, double ypos) {
+	offsetx = xpos - lastMousePosX;
+	offsety = ypos - lastMousePosY;
 	lastMousePosX = xpos;
 	lastMousePosY = ypos;
 }
@@ -179,6 +191,31 @@ bool processInput(bool continueApplication) {
 	}
 	TimeManager::Instance().CalculateFrameRate(false);
 	deltaTime = TimeManager::Instance().DeltaTime;
+	if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+	camera->moveFrontCamera(true, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+		camera->moveFrontCamera(false, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+		camera->moveRightCamera(true, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+		camera->moveRightCamera(false, deltaTime);
+	
+	if (glfwGetMouseButton(window, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+		camera->mouseMoveCamera(offsetx, offsety, deltaTime);
+	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+		rot1 += 0.01;
+	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+		rot2 += 0.01;
+	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+		rot3 += 0.01;
+	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
+		rot11 += 0.01;
+	if (glfwGetKey(window, GLFW_KEY_5) == GLFW_PRESS)
+		rot22 += 0.01;
+	if (glfwGetKey(window, GLFW_KEY_6) == GLFW_PRESS)
+		rot33 += 0.01;
+	offsetx = 0;
+	offsety = 0;
 	glfwPollEvents();
 	return continueApplication;
 }
@@ -197,7 +234,8 @@ void applicationLoop() {
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
 			(float)screenWidth / screenWidth, 0.01f, 100.0f);
 		// matrix de vista
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));
+		glm::mat4 view = camera->getViewMatrix();
+		//glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));
 
 		// Matrix con diagonal unitaria
 		// Matriz del Cylindro del torso
@@ -212,9 +250,41 @@ void applicationLoop() {
 
 		glm::mat4 matrixs6 = glm::translate(matrixs5, glm::vec3(0.3f, 0.0f, 0.0f));
 
-		glm::mat4 matrix7 = glm::rotate(matrixs6, -0.2f, glm::vec3(0.0f, 0.0f, 1.0f));
-		matrix7 = glm::translate(matrix7, glm::vec3(0.25f, 0.0f, 0.0f));
-		matrix7 = glm::scale(matrix7, glm::vec3(0.5, 0.15, 0.15f));
+
+		matrixs6 = glm::rotate(matrixs6, rot1, glm::vec3(0.0, 0.0, 1.0));
+		matrixs6 = glm::rotate(matrixs6, rot2, glm::vec3(0.0, 1.0, 0.0));
+		matrixs6 = glm::rotate(matrixs6, rot3, glm::vec3(1.0, 0.0, 0.0));
+
+
+		/*glm::mat4 matrix7 = glm::rotate(matrixs6, -0.2f, glm::vec3(0.0f, 0.0f, 1.0f));
+				matrixs6 = glm::scale(matrixs6, glm::vec3(0.1f, 0.1f, 0.1f));*/
+		glm::mat4 matrix7 = glm::translate(matrixs6, glm::vec3(0.25f, 0.0f, 0.0f));
+
+		glm::mat4 matrixs7 = glm::translate(matrix7, glm::vec3(0.3f, 0.0f, 0.0f));
+
+		matrixs7 = glm::rotate(matrixs7, rot11, glm::vec3(0.0, 0.0, 1.0));
+		matrixs7 = glm::rotate(matrixs7, rot22, glm::vec3(0.0, 1.0, 0.0));
+		matrixs7 = glm::rotate(matrixs7, rot33, glm::vec3(1.0, 0.0, 0.0));
+		glm::mat4 matrix8 = glm::translate(matrixs7, glm::vec3(0.25f, 0.0f, 0.0f));
+		matrix8 = glm::rotate(matrix8, 1.5708f, glm::vec3(0.0, 0.0, 1.0));
+		matrix8 = glm::scale(matrix8, glm::vec3(0.15, 0.5, 0.15f));
+		cylinder.setProjectionMatrix(projection);
+		cylinder.setViewMatrix(view);
+		cylinder.enableWireMode();
+		cylinder.setColor(glm::vec3(0.8, 0.3, 1.0));
+		cylinder.render(matrix8);
+
+
+		matrixs7 = glm::scale(matrixs7, glm::vec3(0.1f, 0.1f, 0.1f));
+
+		sphere.setProjectionMatrix(projection);
+		sphere.setViewMatrix(view);
+		sphere.enableWireMode();
+		sphere.render(matrixs7);
+
+		//matrix7 = glm::translate(matrix7, glm::vec3(0.25f, 0.0f, 0.0f));
+		matrix7 = glm::rotate(matrix7, 1.5708f, glm::vec3(0.0,0.0,1.0));
+		matrix7 = glm::scale(matrix7, glm::vec3(0.15,0.5, 0.15f));
 		cylinder.setProjectionMatrix(projection);
 		cylinder.setViewMatrix(view);
 		cylinder.enableWireMode();
