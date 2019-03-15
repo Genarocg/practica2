@@ -41,14 +41,19 @@ Vertex vertices[] =
 GLuint indices[] = {  // Note that we start from 0!
 	0, 1, 2,
 	0, 2, 3,
+
 	1, 4, 5,
 	1, 5, 2,
+
 	0, 3, 6,
 	0, 6, 7,
+
 	0, 4, 1,
 	0, 7, 4,
+
 	3, 2, 5,
 	3, 5, 6,
+
 	4, 5, 6,
 	4, 6, 7
 };
@@ -235,11 +240,11 @@ void applicationLoop() {
 
 
 	glm::vec3 cubePositions[] = { 
-		glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-2.0f, -5.0f, -15.0f),
-		glm::vec3(-1.5f, 2.2f, -2.5f), glm::vec3(1.8f, 1.0f, -12.3f),
+		glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(-2.0f, -5.0f, -15.0f)
+	/*	glm::vec3(-1.5f, 2.2f, -2.5f), glm::vec3(1.8f, 1.0f, -12.3f),
 		glm::vec3(4.4f, -0.4f, -3.5f), glm::vec3(-6.7f, 3.0f, -7.5f),
 		glm::vec3(-4.3f, -3.0f, -2.5f), glm::vec3(3.5f, 8.0f, -2.5f),
-		glm::vec3(-1.7f, -0.7f, -1.5f), glm::vec3(3.3f, 3.0f, -1.5f)
+		glm::vec3(-1.7f, -0.7f, -1.5f), glm::vec3(3.3f, 3.0f, -1.5f)*/
 	};
 
 	while (psi) {
@@ -261,7 +266,10 @@ void applicationLoop() {
 		glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
 
 		glBindVertexArray(VAO);
-		float scale = 1.0;
+
+		glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (GLuint *)0);
+
+		/*float scale = 1.0;
 		for (int i = 0; i < 10; i++)
 		{
 			glm::mat4 model = glm::translate(
@@ -284,7 +292,7 @@ void applicationLoop() {
 			glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_INT, (GLuint *)0);
 
 			scale += 0.1;
-		}
+		}*/
 
 		glBindVertexArray(0);
 
