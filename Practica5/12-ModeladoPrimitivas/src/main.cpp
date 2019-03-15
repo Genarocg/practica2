@@ -21,7 +21,7 @@
 //discretizacio de la esfera - cortes
 
 Sphere sphere(10, 10,1.0f);
-Cylinder cylinder(5, 20, 0.2, 0.5);
+Cylinder cylinder(20, 20, 0.5, 0.5);
 Box box;
 
 //GLM include
@@ -201,7 +201,8 @@ void applicationLoop() {
 
 		glm::mat4 projection = glm::perspective(glm::radians(45.0f),
 			(float)screenWidth / screenWidth, 0.01f, 100.0f);
-		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));//traslacion a la coordenada -8.0
+		//traslacion a la coordenada -8.0
+		glm::mat4 view = glm::translate(glm::mat4(1.0f), glm::vec3(0.0f, 0.0f, -8.0f));
 		//setea la matriz de proyeccion
 		sphere.setProjectionMatrix(projection);
 		//setea la matriz de vista
@@ -219,7 +220,7 @@ void applicationLoop() {
 		cylinder.setViewMatrix(view);
 		cylinder.setPosition(glm::vec3(-2.0f, -2.0f, 1.0f));
 		cylinder.setScale(glm::vec3(1.0, 1.0, 1.0));
-		cylinder.enableWireMode();
+		//cylinder.enableWireMode();
 		cylinder.render();
 
 		box.setProjectionMatrix(projection);
