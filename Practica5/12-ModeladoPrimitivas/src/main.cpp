@@ -219,6 +219,7 @@ void applicationLoop() {
 		cylinder.setProjectionMatrix(projection);
 		cylinder.setViewMatrix(view);
 		cylinder.setPosition(glm::vec3(-2.0f, -2.0f, 1.0f));
+		cylinder.setOrientation(glm::vec3(-5.0, 2.0, 2.0));
 		cylinder.setScale(glm::vec3(1.0, 1.0, 1.0));
 		//cylinder.enableWireMode();
 		cylinder.render();
