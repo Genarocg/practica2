@@ -3,11 +3,11 @@
 Sphere::Sphere(int slices, int stacks, float ratio) {
 	vertexArray.resize(((slices + 1) * (stacks + 1)));
 	index.resize((slices * stacks + slices) * 6);
-	for (int i = 0; i <= stacks; ++i) {
+	for (int i = 0; i <= stacks; ++i) {//cortes verticales
 		float V = i / (float)stacks;
 		float phi = V * M_PI;
 
-		for (int j = 0; j <= slices; ++j) {
+		for (int j = 0; j <= slices; ++j) {//cortes horizontales
 			float U = j / (float)slices;
 			float theta = U * M_PI * 2.0;
 
