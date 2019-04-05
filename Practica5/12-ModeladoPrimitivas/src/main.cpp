@@ -30,7 +30,6 @@ Box box;
 #include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
 
-Shader shader;
 
 int screenWidth;
 int screenHeight;
@@ -42,7 +41,7 @@ int lastMousePosX;
 int lastMousePosY;
 
 double deltaTime;
-
+Shader shader;
 // Se definen todos las funciones.
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes);
 void keyCallback(GLFWwindow* window, int key, int scancode, int action, int mode);
