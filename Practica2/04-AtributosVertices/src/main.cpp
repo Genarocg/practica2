@@ -615,19 +615,24 @@ void applicationLoop() {
 		glClearColor(1.0f, 1.0f, 0.8f, 0.0f);
 
 		glUseProgram(shaderProgram);
-		if (render1)
-		{
-			glBindVertexArray(VAO);
+		//if (render1)
+		//{
+		//	glBindVertexArray(VAO);
+		//	glDrawArrays(GL_TRIANGLES, 0, 216);
+		//	//si queremos dibujar más triangulos debemos cambiar el 3, por el numero de vertices.
+
+		//}
+		//else {
+
+		//	glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
+		//	glBindVertexArray(VAO2);
+		//	glDrawArrays(GL_TRIANGLES, 0, 36);
+		//}
+				glBindVertexArray(VAO);
 			glDrawArrays(GL_TRIANGLES, 0, 216);
-			//si queremos dibujar más triangulos debemos cambiar el 3, por el numero de vertices.
-
-		}
-		else {
-
-			glClearColor(0.0f, 1.0f, 1.0f, 0.0f);
-			glBindVertexArray(VAO2);
+					glBindVertexArray(VAO2);
 			glDrawArrays(GL_TRIANGLES, 0, 36);
-		}
+
 		glBindVertexArray(0);
 
 		glfwSwapBuffers(window);
