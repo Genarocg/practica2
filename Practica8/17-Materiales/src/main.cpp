@@ -270,13 +270,15 @@ void applicationLoop() {
 		glUniform3f(iluminacionShader.getUniformLocation("light.specular"), 0.5, 0.3, 0.2);
 //		glUniform3fv(iluminacionShader.getUniformLocation("viewPos"), 1, glm::value_ptr(camera->getPosition()));
 
-		glUniform3f(iluminacionShader.getUniformLocation("material.ambient"), 0.3, 0.3, 0.3);
-		glUniform3f(iluminacionShader.getUniformLocation("material.diffuse"), 0.3, 0.3, 0.3);
-		glUniform3f(iluminacionShader.getUniformLocation("material.specular"), 0.4, 0.4, 0.4);
+		glUniform3f(iluminacionShader.getUniformLocation("material.ambient"), 0.25, 0.25, 0.25);
+		glUniform3f(iluminacionShader.getUniformLocation("material.diffuse"), 0.4, 0.4, 0.4);
+		glUniform3f(iluminacionShader.getUniformLocation("material.specular"), 0.774597, 0.774597, 0.774597);
 
-		glUniform1f(iluminacionShader.getUniformLocation("material.shininess"),64.0);
+		glUniform1f(iluminacionShader.getUniformLocation("material.shininess"), 0.6);
 
 		glUniform3fv(iluminacionShader.getUniformLocation("viewPos"), 1, glm::value_ptr(camera->getPosition()));
+
+
 
 
 
