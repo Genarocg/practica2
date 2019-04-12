@@ -268,7 +268,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	texture4.freeImage(bitmap4);
 
 	//cuarta textura cubo
-	Texture texture5("../../Textures/frezeer.png");
+	Texture texture5("../../Textures/mario2.png");
 	FIBITMAP* bitmap5 = texture5.loadImage(false);
 	unsigned char * data5 = texture5.convertToData(bitmap5, imageWidth, imageHeight);
 	glGenTextures(1, &textureID5);//texttura y numero, y referencia

@@ -12,18 +12,9 @@ struct PositionalLight{
 };
 
 
-strut material{
-	vec3 ambient;
-	vec3 diffuse;
-	vec3 specular;
-
-
-};
 out vec4 color;
 uniform PositionalLight light;
-uniform Material material;
 uniform vec3 viewPos;
-float shininess;
 
 
 void main(){
@@ -39,11 +30,11 @@ void main(){
 
 	vec3 r = reflect (-lightDir, normal);
 	vec3 viewDir = normalize(viewPos - fragPos);
-	float spec = pow(max(dot(r,viewDir),0.0),material.shininess);
+	float spec = pow(max(dot(r,viewDir),0.0),128.0);
 	vec3 specular = spec * light.specular *our_color;
 
 
-	vec3 result = ambient + diff * light.diffuse *  material. diffuse + spec * light.specular * material.specular;
+	vec3 result = (ambient + diffuse + specular) * our_color;
 
 
 	color = vec4(result, 1.0);

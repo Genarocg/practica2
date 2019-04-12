@@ -258,15 +258,15 @@ void applicationLoop() {
 		if (angle > 2 * M_PI)
 			angle = 0.0;
 		else
-			angle += 0.00001;
+			angle += 0.0001;
 
 		glm::mat4 lightModelmatrix = glm::rotate(cubeModelMatrix, angle, glm::vec3(0.0f, 1.0f, 0.0f));
 		lightModelmatrix = glm::translate(lightModelmatrix, glm::vec3(0.0f, 0.0f, -ratio));
 
 		iluminacionShader.turnOn();
-		glUniform3f(iluminacionShader.getUniformLocation("light.ambient"), 0.3, 0.3, 0.3);//agregamos la componente ambiental
-		glUniform3f(iluminacionShader.getUniformLocation("light.diffuse"),0.5, 0.5, 0.7);//agregamos la componente diffusa
-		glUniform3f(iluminacionShader.getUniformLocation("light.specular"), 0.3, 0.6, 0.8);//agregamos la componente specular
+		glUniform3f(iluminacionShader.getUniformLocation("light.ambient"), 0.2,0.5,1.0);//agregamos la componente ambiental
+		glUniform3f(iluminacionShader.getUniformLocation("light.diffuse"),1.0, 0.0, 0.5);//agregamos la componente diffusa
+		glUniform3f(iluminacionShader.getUniformLocation("light.specular"), 1.0,1.0,1.0);//agregamos la componente specular
 		glUniform3fv(iluminacionShader.getUniformLocation("light.position"), 1, glm::value_ptr(glm::vec3(lightModelmatrix * glm::vec4(0.0, 0.0, 0.0, 1.0))));
 		glUniform3fv(iluminacionShader.getUniformLocation("viewPos"), 1, glm::value_ptr(camera->getPosition()));
 
