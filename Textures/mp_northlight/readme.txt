@@ -1,33 +1,29 @@
 
-                            ___ ___   __      __           __           __      __   
-                           |   Y   | |__| .--|  | .-----. |__| .-----. |  |--. |  |_ 
-                           |.      | |  | |  _  | |     | |  | |  _  | |     | |   _|
-                           |. \_/  | |__| |_____| |__|__| |__| |___  | |__|__| |____|
-                           |:  |   |                           |_____|               
-                           |::.|:. |                                                 
-                           `--- ---'                                                 
-                                                                                
-                               _______   __   __                                
-                              |   _   | |__| |  | .-----. .-----. .----. .-----.
-                              |   1___| |  | |  | |  -__| |     | |  __| |  -__|
-                              |____   | |__| |__| |_____| |__|__| |____| |_____|
-                              |:  1   |                                         
-                              |::.. . |                                         
-                              `-------'                                         
-                                                                                                                                                                          
+                                                                                                                
+                  , _                    _                            _            _             
+                 /|/ \                  | |                        \_|_)  o       | |            
+                  |   |   __   ,_   _|_ | |     _   ,_    _  _       |        __, | |    _|_  ,  
+                  |   |  /  \_/  |   |  |/ \   |/  /  |  / |/ |     _|    |  /  | |/ \    |  / \_
+                  |   |_/\__/    |_/ |_/|   |_/|__/   |_/  |  |_/  (/\___/|_/\_/|/|   |_/ |_/ \/ 
+                                                                               /|                
+                                                                               \|                
+                                                                                                                               
 
+                                                                                       
+
+
+
+                                       
                                        From the Mind of the Mighty Pete !
 
 
                                                     Enjoy !
-
             
                                      http://www.geocities.com/petes-oasis/
 
 
-                                    http://www.planethalflife.com/wadfather/
+                                     http://halflife.lowlife.com/wadfather/
 
-                    
                                   
 
 
@@ -79,13 +75,7 @@
 
 
 
-Name length warning:
 
-It's possible that the file names are too long for some older games.
-If that's the case just shorten them leaving everything after the _ and they should work just fine.
-Remember you only need the *.tga and *.bmp for some games and the *.tga and *.pcx for other games.
-If you don't need them you don't have to include them with your map.
-Don't distribute my zips, If you want the originals go back to the Wadfather and download a fresh set.   
 
                
 
