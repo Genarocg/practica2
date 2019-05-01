@@ -164,7 +164,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	box.scaleUVS(glm::vec3(20.0f, 20.0f, 20.0f));
 	box2.scaleUVS(glm::vec3(15.0f, 15.0f, 15.0f));
 	camera->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
-	// Textura Ladrillos
+	// Textura Piso
 	int imageWidth, imageHeight;
 	Texture texture = Texture("../Textures/Piso_1.jpg");
 	FIBITMAP* bitmap = texture.loadImage(false);
@@ -390,7 +390,6 @@ void applicationLoop() {
 		glUniform3f(shaderMateriales.getUniformLocation("material.diffuse"), 0.4, 0.5, 0.8);
 		glUniform3f(shaderMateriales.getUniformLocation("material.specular"), 0.5, 0.3, 0.2);
 		glUniform1f(shaderMateriales.getUniformLocation("material.shininess"), 32.0);
-		//cylinder.render();
 		shaderMateriales.turnOff();
 		shaderLighting.turnOn();
 		glUniform3fv(shaderLighting.getUniformLocation("viewPos"), 1, glm::value_ptr(camera->getPosition()));
@@ -450,7 +449,7 @@ void applicationLoop() {
 		box.setScale(glm::vec3(10.0, 20.0, 30.0));
 		//box.setScale(glm::vec3(1.0, 2.0, 3.0));
 		glBindTexture(GL_TEXTURE_2D, textureID2);
-		box.setShader(&shaderDirectionLight);
+		box.setShader(&shaderDirectionLight);//Para luz con sombras se utiliza el shader direccional
 		box.setProjectionMatrix(projection);
 		box.setViewMatrix(view);
 		box.render();
@@ -458,7 +457,7 @@ void applicationLoop() {
 		box.setPosition(glm::vec3(15.0, 10.0, -10.0));
 		box.setScale(glm::vec3(9.9, 19.9, 29.9));
 		glBindTexture(GL_TEXTURE_2D, textureID2);
-		box.setShader(&shaderTexture);
+		box.setShader(&shaderTexture);//Para luz sin sombras se usa el shader de textura
 		box.setProjectionMatrix(projection);
 		box.setViewMatrix(view);
 		box.render();
