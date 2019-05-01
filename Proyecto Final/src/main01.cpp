@@ -35,6 +35,7 @@ std::shared_ptr<FirstPersonCamera> camera(new FirstPersonCamera());
 Sphere sphere(20, 20);
 Cylinder cylinder(20, 20, 0.5, 0.5);
 Box box;
+Box box2;
 Box boxWater;
 
 Shader shaderColor;
@@ -46,15 +47,8 @@ Shader shaderPointLight;
 Shader shaderSpotLight;
 //shader que tiene multiples luces
 Shader shaderLighting;
-
-Model modelRock;
-Model modelRail;
-Model modelAirCraft;
-Model arturito;
-Model modelTrain;
-Model robot;
-Model perro;
-GLuint textureID1, textureID2, textureID3, textureCespedID, textureWaterID, textureCubeTexture;
+//Aqui declaramos los identificadores de las Texturas
+GLuint textureID1, textureID2, textureID3, texturePisoID, textureWaterID, textureCubeTexture;
 GLuint cubeTextureID;
 
 GLenum types[6] = {
@@ -65,14 +59,14 @@ GLenum types[6] = {
 	GL_TEXTURE_CUBE_MAP_POSITIVE_Z,
 	GL_TEXTURE_CUBE_MAP_NEGATIVE_Z
 };
-
+//Archivos para el skybox
 std::string fileNames[6] = { 
-	"../../Textures/mp_bloodvalley/blood-valley_ft.tga",
-	"../../Textures/mp_bloodvalley/blood-valley_bk.tga",
-	"../../Textures/mp_bloodvalley/blood-valley_up.tga",
-	"../../Textures/mp_bloodvalley/blood-valley_dn.tga",
-	"../../Textures/mp_bloodvalley/blood-valley_rt.tga",
-	"../../Textures/mp_bloodvalley/blood-valley_lf.tga"
+	"../Textures/mp_bloodvalley/blood-valley_ft.tga",
+	"../Textures/mp_bloodvalley/blood-valley_bk.tga",
+	"../Textures/mp_bloodvalley/blood-valley_up.tga",
+	"../Textures/mp_bloodvalley/blood-valley_dn.tga",
+	"../Textures/mp_bloodvalley/blood-valley_rt.tga",
+	"../Textures/mp_bloodvalley/blood-valley_lf.tga"
 };
 
 int screenWidth;
@@ -95,6 +89,10 @@ void init(int width, int height, std::string strTitle, bool bFullScreen);
 void destroyWindow();
 void destroy();
 bool processInput(bool continueApplication = true);
+
+
+/************************************************************************/
+
 
 // Implementacion de todas las funciones.
 void init(int width, int height, std::string strTitle, bool bFullScreen) {
@@ -148,36 +146,48 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 
 	glEnable(GL_DEPTH_TEST);
 
-	shaderColor.initialize("../../Shaders/transformaciones.vs", "../../Shaders/transformaciones.fs");
-	shaderTexture.initialize("../../Shaders/texturizado_res.vs", "../../Shaders/texturizado_res.fs");
-	shaderCubeTexture.initialize("../../Shaders/cubeTexture.vs", "../../Shaders/cubeTexture.fs");
-	shaderMateriales.initialize("../../Shaders/iluminacion_materiales_res.vs", "../../Shaders/iluminacion_materiales_res.fs");
-	shaderDirectionLight.initialize("../../Shaders/typeLight.vs", "../../Shaders/directionalLight.fs");
-	shaderPointLight.initialize("../../Shaders/typeLight.vs", "../../Shaders/pointLight.fs");
-	shaderSpotLight.initialize("../../Shaders/typeLight.vs", "../../Shaders/spotLight.fs");
-	shaderLighting.initialize("../../Shaders/typeLight.vs", "../../Shaders/multipleLights.fs");
+	shaderColor.initialize("../Shaders/transformaciones.vs", "../Shaders/transformaciones.fs");
+	shaderTexture.initialize("../Shaders/texturizado_res.vs", "../Shaders/texturizado_res.fs");
+	shaderCubeTexture.initialize("../Shaders/cubeTexture.vs", "../Shaders/cubeTexture.fs");
+	shaderMateriales.initialize("../Shaders/iluminacion_materiales_res.vs", "../Shaders/iluminacion_materiales_res.fs");
+	shaderDirectionLight.initialize("../Shaders/typeLight.vs", "../Shaders/directionalLight.fs");
+	shaderPointLight.initialize("../Shaders/typeLight.vs", "../Shaders/pointLight.fs");
+	shaderSpotLight.initialize("../Shaders/typeLight.vs", "../Shaders/spotLight.fs");
+	shaderLighting.initialize("../Shaders/typeLight.vs", "../Shaders/multipleLights.fs");
 
+	//siempre que declares una nueva caja a la que tendremos diferente numero de texturas, iniciar su constructor
 	sphere.init();
 	cylinder.init();
 	box.init();
-	//se escala las coordenadas de textura.
-	box.scaleUVS(glm::vec2(100.0, 100.0));
-	boxWater.init();
-	boxWater.scaleUVS(glm::vec2(1.0, 1.0));
-	//Se cargan los modelos.
-	modelRock.loadModel("../../models/rock/rock.obj");
-	modelRail.loadModel("../../models/railroad/railroad_track.obj");
-	modelAirCraft.loadModel("../../models/Aircraft_obj/E 45 Aircraft_obj.obj");
-	robot.loadModel("../../models/robot/Neck_Mech_Walker_by_3DHaupt-(Wavefront OBJ).obj");
-	perro.loadModel("../../models/perro/12226_Dog_v2_l3.obj");
-
-	camera->setPosition(glm::vec3(0.0f, 0.0f, 0.4f));
-	
+	box2.init();
+	//se escala las coordenadas de textura, es decir, cuantas veces se repite la textura
+	box.scaleUVS(glm::vec3(20.0f, 20.0f, 20.0f));
+	box2.scaleUVS(glm::vec3(15.0f, 15.0f, 15.0f));
+	camera->setPosition(glm::vec3(0.0f, 0.0f, -10.0f));
 	// Textura Ladrillos
 	int imageWidth, imageHeight;
-	Texture texture("../../Textures/texturaLadrillos.jpg");
+	Texture texture = Texture("../Textures/Piso_1.jpg");
 	FIBITMAP* bitmap = texture.loadImage(false);
 	unsigned char * data = texture.convertToData(bitmap, imageWidth, imageHeight);
+	glGenTextures(1, &texturePisoID);
+	glBindTexture(GL_TEXTURE_2D, texturePisoID);
+	// set the texture wrapping parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	// set texture filtering parameters
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	if (data) {
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
+		glGenerateMipmap(GL_TEXTURE_2D);
+	}
+	else
+		std::cout << "Failed to load texture" << std::endl;
+	texture.freeImage(bitmap);
+	//****copiar desde aqui para declarar una textura*//////////////////////
+	texture = Texture("../Textures/detalle.jpg");
+	bitmap = texture.loadImage(false);
+	data = texture.convertToData(bitmap, imageWidth, imageHeight);
 	glGenTextures(1, &textureID1);
 	glBindTexture(GL_TEXTURE_2D, textureID1);
 	// set the texture wrapping parameters
@@ -186,7 +196,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	// set texture filtering parameters
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	if (data){
+	if (data) {
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
 		glGenerateMipmap(GL_TEXTURE_2D);
 	}
@@ -194,8 +204,10 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 		std::cout << "Failed to load texture" << std::endl;
 	texture.freeImage(bitmap);
 
-	// Texture Goku
-	texture = Texture("../../Textures/goku.png");
+	/**********************Hasta aqui, y solo cambiarle los nombres del archivo, y del identificador*/
+	//Ejemplo
+
+	texture = Texture("../Textures/rayas.jpg");
 	bitmap = texture.loadImage(false);
 	data = texture.convertToData(bitmap, imageWidth, imageHeight);
 	glGenTextures(1, &textureID2);
@@ -213,64 +225,7 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	else
 		std::cout << "Failed to load texture" << std::endl;
 	texture.freeImage(bitmap);
-
-	// Textura cuadritos
-	texture = Texture("../../Textures/test.png");
-	bitmap = texture.loadImage(false);
-	data = texture.convertToData(bitmap, imageWidth, imageHeight);
-	glGenTextures(1, &textureID3);
-	glBindTexture(GL_TEXTURE_2D, textureID3);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-		std::cout << "Failed to load texture" << std::endl;
-	texture.freeImage(bitmap);
-
-	texture = Texture("../../Textures/cesped.jpg");
-	bitmap = texture.loadImage(false);
-	data = texture.convertToData(bitmap, imageWidth, imageHeight);
-	glGenTextures(1, &textureCespedID);
-	glBindTexture(GL_TEXTURE_2D, textureCespedID);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-		std::cout << "Failed to load texture" << std::endl;
-	texture.freeImage(bitmap);
-
-	texture = Texture("../../Textures/water2.jpg");
-	bitmap = texture.loadImage(false);
-	data = texture.convertToData(bitmap, imageWidth, imageHeight);
-	glGenTextures(1, &textureWaterID);
-	glBindTexture(GL_TEXTURE_2D, textureWaterID);
-	// set the texture wrapping parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);	// set texture wrapping to GL_REPEAT (default wrapping method)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	// set texture filtering parameters
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	if (data) {
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, imageWidth, imageHeight, 0, GL_BGRA, GL_UNSIGNED_BYTE, data);
-		glGenerateMipmap(GL_TEXTURE_2D);
-	}
-	else
-		std::cout << "Failed to load texture" << std::endl;
-	texture.freeImage(bitmap);
+/***************************************fin ejemplo****************/
 
 	glGenTextures(1, &cubeTextureID);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTextureID);
@@ -312,6 +267,8 @@ void destroy() {
 	sphere.destroy();
 	cylinder.destroy();
 	box.destroy();
+	//Tambien colocar su destructor de la nueva caja si utilizaras una nueva que ya hayas declarado su constructor
+	box2.destroy();
 }
 
 void reshapeCallback(GLFWwindow* Window, int widthRes, int heightRes) {
@@ -356,6 +313,9 @@ void mouseButtonCallback(GLFWwindow* window, int button, int state, int mod) {
 	}
 }
 
+
+
+
 bool processInput(bool continueApplication) {
 	if (exitApp || glfwWindowShouldClose(window) != 0) {
 		return false;
@@ -374,22 +334,16 @@ bool processInput(bool continueApplication) {
 	return continueApplication;
 }
 
+
 void applicationLoop() {
 	bool psi = true;
 	double lastTime = TimeManager::Instance().GetTime();
 
-	float angle = 0.0;
-	float ratio = 20.0;
-
-	float aircraftZ = 0.0;
-	float aircraftX = 0.0;
-	bool direcionAirCraft = true;
-	bool direcionAirCraft1 = true;
-	float rotationAirCraft = 0.0;
-	bool finishRotation = true;
-
 	while (psi) {
 		psi = processInput(true);
+
+		float angle = 0.0;
+		float ratio = 20.0;
 
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
@@ -400,29 +354,29 @@ void applicationLoop() {
 		// matrix de vista
 		glm::mat4 view = camera->getViewMatrix();
 
-		shaderTexture.turnOn();
-		// Importante si se quiere renderizar modelos y texturas
-		glActiveTexture(GL_TEXTURE0);
-		cylinder.setShader(&shaderTexture);
-		cylinder.setProjectionMatrix(projection);
-		cylinder.setViewMatrix(view);
-		cylinder.setPosition(glm::vec3(-3.0f, 2.0f, -3.0f));
-		glBindTexture(GL_TEXTURE_2D, textureID2);
-		cylinder.render(0, cylinder.getSlices() * cylinder.getStacks() * 2 * 3);
-		glBindTexture(GL_TEXTURE_2D, textureID1);
-		cylinder.render(cylinder.getSlices() * cylinder.getStacks() * 2 * 3, cylinder.getSlices() * 3);
-		glBindTexture(GL_TEXTURE_2D, textureID3);
-		cylinder.render(cylinder.getSlices() * cylinder.getStacks() * 2 * 3 + cylinder.getSlices() * 3, cylinder.getSlices() * 3);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		shaderTexture.turnOff();
+		//	shaderTexture.turnOn();
+		//	// Importante si se quiere renderizar modelos y texturas
+		//	glActiveTexture(GL_TEXTURE0);
+		//	cylinder.setShader(&shaderTexture);
+		//	cylinder.setProjectionMatrix(projection);
+		//	cylinder.setViewMatrix(view);
+		//	cylinder.setPosition(glm::vec3(-3.0f, 2.0f, -3.0f));
+		//	glBindTexture(GL_TEXTURE_2D, textureID2);
+		//	//cylinder.render(0, cylinder.getSlices() * cylinder.getStacks() * 2 * 3);
+		//	glBindTexture(GL_TEXTURE_2D, textureID1);
+		////	cylinder.render(cylinder.getSlices() * cylinder.getStacks() * 2 * 3, cylinder.getSlices() * 3);
+		//	glBindTexture(GL_TEXTURE_2D, textureID3);
+		//	//cylinder.render(cylinder.getSlices() * cylinder.getStacks() * 2 * 3 + cylinder.getSlices() * 3, cylinder.getSlices() * 3);
+		//	glBindTexture(GL_TEXTURE_2D, 0);
+		//	shaderTexture.turnOff();
 
-		cylinder.setShader(&shaderMateriales);
-		cylinder.setProjectionMatrix(projection);
-		cylinder.setViewMatrix(view);
-		cylinder.setPosition(glm::vec3(0.0, 0.0, 0.0));
-		cylinder.setScale(glm::vec3(1.0, 1.0, 1.0));
+		//	cylinder.setShader(&shaderMateriales);
+		//	cylinder.setProjectionMatrix(projection);
+		//	cylinder.setViewMatrix(view);
+		//	cylinder.setPosition(glm::vec3(0.0, 0.0, 0.0));
+		//	cylinder.setScale(glm::vec3(1.0, 1.0, 1.0));
 
-		// Iluminación
+			// Iluminación
 		glm::mat4 lightModelmatrix = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(1.0f, 0.0f, 0.0f));
 		lightModelmatrix = glm::translate(lightModelmatrix, glm::vec3(0.0f, 0.0f, -ratio));
 
@@ -436,21 +390,20 @@ void applicationLoop() {
 		glUniform3f(shaderMateriales.getUniformLocation("material.diffuse"), 0.4, 0.5, 0.8);
 		glUniform3f(shaderMateriales.getUniformLocation("material.specular"), 0.5, 0.3, 0.2);
 		glUniform1f(shaderMateriales.getUniformLocation("material.shininess"), 32.0);
-		cylinder.render();
+		//cylinder.render();
 		shaderMateriales.turnOff();
-
 		shaderLighting.turnOn();
 		glUniform3fv(shaderLighting.getUniformLocation("viewPos"), 1, glm::value_ptr(camera->getPosition()));
 		//Directional light
 		//se envian los valores de las componentes ambientales difusa y especular
 		glUniform3f(shaderLighting.getUniformLocation("directionalLight.light.ambient"), 0.025, 0.025, 0.025);
-		glUniform3f(shaderLighting.getUniformLocation("directionalLight.light.diffuse"), 0.1, 0.1, 0.1);
+		glUniform3f(shaderLighting.getUniformLocation("directionalLight.light.diffuse"), 1.0, 1.0, 1.0);
 		glUniform3f(shaderLighting.getUniformLocation("directionalLight.light.specular"), 0.15, 0.15, 0.15);
 		glUniform3fv(shaderLighting.getUniformLocation("directionalLight.direction"), 1, glm::value_ptr(glm::vec3(0, -1.0, 0.0)));
 		//Numero de luces spot y point
 		int locCount = shaderLighting.getUniformLocation("pointLightCount");
-		glUniform1i(shaderLighting.getUniformLocation("pointLightCount"), 1);
-		glUniform1i(shaderLighting.getUniformLocation("spotLightCount"), 2);
+		glUniform1i(shaderLighting.getUniformLocation("pointLightCount"), 0);
+		glUniform1i(shaderLighting.getUniformLocation("spotLightCount"), 0);
 		// Point light
 		glUniform3fv(shaderLighting.getUniformLocation("pointLights[0].position"), 1, glm::value_ptr(glm::vec3(lightModelmatrix * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f))));
 		glUniform1f(shaderLighting.getUniformLocation("pointLights[0].constant"), 1.0f);
@@ -470,100 +423,60 @@ void applicationLoop() {
 		glUniform3f(shaderLighting.getUniformLocation("spotLights[0].light.ambient"), 0.025, 0.025, 0.025);
 		glUniform3f(shaderLighting.getUniformLocation("spotLights[0].light.diffuse"), 0.7, 0.2, 0.6);
 		glUniform3f(shaderLighting.getUniformLocation("spotLights[0].light.specular"), 0.1, 0.7, 0.8);
-		//spot light 2
-		glUniform3fv(shaderLighting.getUniformLocation("spotLights[1].position"), 1, glm::value_ptr(glm::vec3(0.0f, 3.0f, -20.0f)));
-		glUniform3fv(shaderLighting.getUniformLocation("spotLights[1].direction"), 1, glm::value_ptr(camera->getFront()));
-		glUniform1f(shaderLighting.getUniformLocation("spotLights[1].cutOff"), glm::cos(glm::radians(12.5f)));
-		glUniform1f(shaderLighting.getUniformLocation("spotLights[1].outerCutOff"), glm::cos(glm::radians(15.0f)));
-		glUniform1f(shaderLighting.getUniformLocation("spotLights[1].constant"), 1.0f);
-		glUniform1f(shaderLighting.getUniformLocation("spotLights[1].linear"), 0.14f);
-		glUniform1f(shaderLighting.getUniformLocation("spotLights[1].quadratics"), 0.07f);
-		glUniform3f(shaderLighting.getUniformLocation("spotLights[1].light.ambient"), 0.025, 0.025, 0.025);
-		glUniform3f(shaderLighting.getUniformLocation("spotLights[1].light.diffuse"), 0.7, 0.2, 0.6);
-		glUniform3f(shaderLighting.getUniformLocation("spotLights[1].light.specular"), 0.1, 0.7, 0.8);
+
 		shaderLighting.turnOff();
-		////robot
-		//robot.setShader(&shaderLighting);
-		//robot.setProjectionMatrix(projection);
-		//robot.setViewMatrix(view);
-		//robot.setPosition(glm::vec3(15.0, 3.0, -20.0));
-		//robot.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//robot.render();
-		////pokebola
-		//perro.setShader(&shaderLighting);
-		//perro.setProjectionMatrix(projection);
-		//perro.setViewMatrix(view);
-		//perro.setPosition(glm::vec3(0.0, 3.0, -20.0));
-		////perro.setOrientation
-		//perro.setScale(glm::vec3(0.01, 0.01, 0.01));
-		//perro.render();
 
-		//modelRock.setShader(&shaderLighting);
-		//modelRock.setProjectionMatrix(projection);
-		//modelRock.setViewMatrix(view);
-		//modelRock.setPosition(glm::vec3(5.0, 3.0, -20.0));
-		//modelRock.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//modelRock.render();
+		shaderDirectionLight.turnOn();
+		glUniform3fv(shaderDirectionLight.getUniformLocation("light.direction"), 1, glm::value_ptr(glm::vec3(0.0f, -10.0f, -20.0f)));
+		glUniform3f(shaderDirectionLight.getUniformLocation("light.ambient"), 0.4, 0.4, 0.4);
+		glUniform3f(shaderDirectionLight.getUniformLocation("light.diffuse"), 0.6, 0.6, 0.6);
+		glUniform3f(shaderDirectionLight.getUniformLocation("light.specular"), 0.5, 0.5, 0.5);
 
-		////se setea el shader con multiples luces
-		//modelRail.setShader(&shaderLighting);
-		//modelRail.setProjectionMatrix(projection);
-		//modelRail.setViewMatrix(view);
-		//modelRail.setPosition(glm::vec3(-10.0, 0.0, 25.0));
-		//modelRail.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//modelRail.render();
-
-		modelAirCraft.setShader(&shaderLighting);
-		modelAirCraft.setProjectionMatrix(projection);
-		modelAirCraft.setViewMatrix(view);
-		modelAirCraft.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//se rota el modelo se coloca en la posicion deseada y se hace el desplazamiento en el eje z
-		glm::mat4 matrixAirCraft = glm::translate(glm::mat4(1.0f), glm::vec3(aircraftX, 0.0, aircraftZ));
-		matrixAirCraft = glm::translate(matrixAirCraft, glm::vec3(10.0, 2.0, 15.0));
-		matrixAirCraft = glm::rotate(matrixAirCraft, rotationAirCraft, glm::vec3(0, 1, 0));
-		modelAirCraft.render(matrixAirCraft);
-
-		/*arturito.setShader(&shaderLighting);
-		arturito.setProjectionMatrix(projection);
-		arturito.setViewMatrix(view);
-		arturito.setScale(glm::vec3(1.0, 1.0, 1.0));
-		glm::mat4 matrixArturito = glm::translate(glm::mat4(1.0f), glm::vec3(0.0, 0.0, aircraftZ));
-		matrixArturito = glm::translate(matrixArturito, glm::vec3(-10.0, 2.0, 15.0));
-		matrixArturito = glm::rotate(matrixArturito, rotationAirCraft, glm::vec3(0, 1, 0));
-		arturito.render(matrixArturito);*/
-
+		shaderDirectionLight.turnOff();
+		//piso
 		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureCespedID);
+		glBindTexture(GL_TEXTURE_2D, texturePisoID);
 		box.setShader(&shaderLighting);
 		box.setProjectionMatrix(projection);
 		box.setViewMatrix(view);
 		box.setPosition(glm::vec3(0.0, 0.0, 0.0));
-		box.setScale(glm::vec3(100.0, 0.001, 100.0));
+		box.setScale(glm::vec3(50.0, 0.01, 50.0));
 		box.render();
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textureWaterID);
-		boxWater.setShader(&shaderLighting);
-		boxWater.setProjectionMatrix(projection);
-		boxWater.setViewMatrix(view);
-		boxWater.setPosition(glm::vec3(3.0, 2.0, -5.0));
-		boxWater.setScale(glm::vec3(10.0, 0.001, 10.0));
-		//se realiza el offsett de la textura.
-		boxWater.offsetUVS(glm::vec2(0.001, 0.001));
-		boxWater.render();
+
+		//Lado derecho del edificio
+		//parte de fuera con luz direccional
+		box.setPosition(glm::vec3(15.0, 10.0, -10.0));
+		box.setScale(glm::vec3(10.0, 20.0, 30.0));
+		//box.setScale(glm::vec3(1.0, 2.0, 3.0));
+		glBindTexture(GL_TEXTURE_2D, textureID2);
+		box.setShader(&shaderDirectionLight);
+		box.setProjectionMatrix(projection);
+		box.setViewMatrix(view);
+		box.render();
+		//Parte de adentro con sin tipo de luz
+		box.setPosition(glm::vec3(15.0, 10.0, -10.0));
+		box.setScale(glm::vec3(9.9, 19.9, 29.9));
+		glBindTexture(GL_TEXTURE_2D, textureID2);
+		box.setShader(&shaderTexture);
+		box.setProjectionMatrix(projection);
+		box.setViewMatrix(view);
+		box.render();
+		//Para pintar una cara
+		/*Estan estas formas
+			render(0,6) -> una cara 
+			render(0,18)-> 3 caras o si pones 24, 30 serian 4 o 5 caras,
+			render(6, 6) ->sólo la segunda cara
+			render(6, 12) -> dos caras, cara 2 y 3
+			render(12, 6) -> sólo la tercera cara
+			y así puedes variarle
+			*/
 
 		if (angle > 2 * M_PI)
 			angle = 0.0;
 		else
+		
 			angle += 0.001;
-
-		sphere.setShader(&shaderColor);
-		sphere.setColor(glm::vec3(0.4f, 0.3f, 0.6f));
-		sphere.setProjectionMatrix(projection);
-		sphere.setViewMatrix(view);
-		sphere.setScale(glm::vec3(1.0f, 1.0f, 1.0f));
-		sphere.enableWireMode();
-		sphere.render(lightModelmatrix);
 
 		// Se Dibuja el Skybox
 		shaderCubeTexture.turnOn();
@@ -585,111 +498,22 @@ void applicationLoop() {
 		glDepthFunc(oldDepthFuncMode);
 		shaderCubeTexture.turnOff();
 
-			/******************************/
-	
-			if (finishRotation) {
-				if (direcionAirCraft  && direcionAirCraft1)
-					aircraftZ -= 0.01;//avanza en -Z
-				else if (direcionAirCraft  && !direcionAirCraft1)
-					aircraftX -= 0.01;//avanza en +x
-				else if (!direcionAirCraft  && direcionAirCraft1)
-					aircraftZ += 0.01;// avanza en +Z
-				else if (!direcionAirCraft  && !direcionAirCraft1)
-					aircraftX += 0.01;//avanza en -x
-
-				if (direcionAirCraft && direcionAirCraft1 && aircraftZ < -6.0) {
-					direcionAirCraft1 = false;
-					finishRotation = false;
-					aircraftZ = -6.0;
-				}
-				if (direcionAirCraft && !direcionAirCraft1 && aircraftX < -6.0) {
-					direcionAirCraft = false;
-					direcionAirCraft1 = true;
-					finishRotation = false;
-					aircraftX = -6.0;
-				}
-				if (!direcionAirCraft && direcionAirCraft1 && aircraftZ > 6.0) {
-					direcionAirCraft1 = false;
-					finishRotation = false;
-					aircraftZ = 6.0;
-				}
-				if (!direcionAirCraft && !direcionAirCraft1 && aircraftX > 6.0) {
-					direcionAirCraft = true;
-					direcionAirCraft1 = true;
-					finishRotation = false;
-					aircraftX = 6.0;
-				}
-
-			}
-			else {
-				rotationAirCraft += 0.01;
-				if (direcionAirCraft && !direcionAirCraft1) {
-					if (rotationAirCraft > glm::radians(90.0f)) {
-						finishRotation = true;
-						rotationAirCraft = glm::radians(90.0f);
-					}
-				}
-				if (!direcionAirCraft && direcionAirCraft1) {
-					if (rotationAirCraft > glm::radians(180.0f)) {
-						finishRotation = true;
-						rotationAirCraft = glm::radians(180.0f);
-					}
-				}
-				if (!direcionAirCraft && !direcionAirCraft1) {
-					if (rotationAirCraft > glm::radians(270.0f)) {
-						finishRotation = true;
-						rotationAirCraft = glm::radians(270.0f);
-					}
-				}
-				if (direcionAirCraft && direcionAirCraft1) {
-					if (rotationAirCraft > glm::radians(360.0f)) {
-						finishRotation = true;
-						rotationAirCraft = glm::radians(0.0f);
-					}
-				}
-
-			}
-			/*****************************************/
-/*
-		if (finishRotation) {
-			if (direcionAirCraft)
-				aircraftX -= 0.01;
-			else
-				aircraftX += 0.01;
-			if (direcionAirCraft && aircraftX < -6.0) {
-				direcionAirCraft = false;
-				finishRotation = false;
-				aircraftX = -6.0;
-			}
-			if (!direcionAirCraft && aircraftX > 6.0) {
-				direcionAirCraft = true;
-				finishRotation = false;
-				aircraftX = 6.0;
-			}
-		}
-		else {
-			rotationAirCraft += 0.01;
-			if (!direcionAirCraft) {
-				if (rotationAirCraft > glm::radians(180.0f)) {
-					finishRotation = true;
-					rotationAirCraft = glm::radians(180.0f);
-				}
-			}
-			else {
-				if (rotationAirCraft > glm::radians(360.0f)) {
-					finishRotation = true;
-					rotationAirCraft = glm::radians(0.0f);
-				}
-			}
-		}
-		*/
-		glfwSwapBuffers(window);
+			glfwSwapBuffers(window);
 	}
 }
 
+
 int main(int argc, char ** argv) {
-	init(800, 700, "Window GLFW", false);
+	init(1500, 700, "Window GLFW", false);
 	applicationLoop();
 	destroy();
 	return 1;
 }
+
+
+
+
+
+
+
+

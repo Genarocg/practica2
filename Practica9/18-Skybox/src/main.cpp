@@ -19,7 +19,7 @@
 #include "Headers/TimeManager.h"
 #include "Headers/Shader.h"
 // Geometry primitives
-#include "Headers/Sphere.h"
+#include "Headers/sphere.h"
 #include "Headers/Cylinder.h"
 #include "Headers/Box.h"
 #include "Headers/FirstPersonCamera.h"
