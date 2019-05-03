@@ -71,9 +71,6 @@
     <ClInclude Include="src\Headers\Texture.h">
       <Filter>Archivos de encabezado</Filter>
     </ClInclude>
-    <ClInclude Include="src\Headers\TimeManager.h">
-      <Filter>Archivos de encabezado</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\cubeTexture.fs">

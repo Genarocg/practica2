@@ -141,7 +141,6 @@
     <ClInclude Include="src\Headers\Shader.h" />
     <ClInclude Include="src\Headers\Sphere.h" />
     <ClInclude Include="src\Headers\Texture.h" />
-    <ClInclude Include="src\Headers\TimeManager.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Shaders\basic.fs" />

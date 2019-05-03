@@ -483,12 +483,12 @@ void applicationLoop() {
 		glUniform3f(shaderLighting.getUniformLocation("spotLights[1].light.specular"), 0.1, 0.7, 0.8);
 		shaderLighting.turnOff();
 		////robot
-		//robot.setShader(&shaderLighting);
-		//robot.setProjectionMatrix(projection);
-		//robot.setViewMatrix(view);
-		//robot.setPosition(glm::vec3(15.0, 3.0, -20.0));
-		//robot.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//robot.render();
+		robot.setShader(&shaderLighting);
+		robot.setProjectionMatrix(projection);
+		robot.setViewMatrix(view);
+		robot.setPosition(glm::vec3(15.0, 3.0, -20.0));
+		robot.setScale(glm::vec3(1.0, 1.0, 1.0));
+		robot.render();
 		////pokebola
 		//perro.setShader(&shaderLighting);
 		//perro.setProjectionMatrix(projection);
@@ -505,13 +505,13 @@ void applicationLoop() {
 		//modelRock.setScale(glm::vec3(1.0, 1.0, 1.0));
 		//modelRock.render();
 
-		////se setea el shader con multiples luces
-		//modelRail.setShader(&shaderLighting);
-		//modelRail.setProjectionMatrix(projection);
-		//modelRail.setViewMatrix(view);
-		//modelRail.setPosition(glm::vec3(-10.0, 0.0, 25.0));
-		//modelRail.setScale(glm::vec3(1.0, 1.0, 1.0));
-		//modelRail.render();
+		//se setea el shader con multiples luces
+		modelRail.setShader(&shaderLighting);
+		modelRail.setProjectionMatrix(projection);
+		modelRail.setViewMatrix(view);
+		modelRail.setPosition(glm::vec3(-10.0, 0.0, 25.0));
+		modelRail.setScale(glm::vec3(1.0, 1.0, 1.0));
+		modelRail.render();
 
 		modelAirCraft.setShader(&shaderLighting);
 		modelAirCraft.setProjectionMatrix(projection);
@@ -549,7 +549,7 @@ void applicationLoop() {
 		boxWater.setPosition(glm::vec3(3.0, 2.0, -5.0));
 		boxWater.setScale(glm::vec3(10.0, 0.001, 10.0));
 		//se realiza el offsett de la textura.
-		boxWater.offsetUVS(glm::vec2(0.001, 0.001));
+		boxWater.offsetUVS(glm::vec2(0.1, 0.001));
 		boxWater.render();
 
 		if (angle > 2 * M_PI)
@@ -589,13 +589,13 @@ void applicationLoop() {
 	
 			if (finishRotation) {
 				if (direcionAirCraft  && direcionAirCraft1)
-					aircraftZ -= 0.01;//avanza en -Z
+					aircraftZ -= 0.1;//avanza en -Z
 				else if (direcionAirCraft  && !direcionAirCraft1)
-					aircraftX -= 0.01;//avanza en +x
+					aircraftX -= 0.1;//avanza en +x
 				else if (!direcionAirCraft  && direcionAirCraft1)
-					aircraftZ += 0.01;// avanza en +Z
+					aircraftZ += 0.1;// avanza en +Z
 				else if (!direcionAirCraft  && !direcionAirCraft1)
-					aircraftX += 0.01;//avanza en -x
+					aircraftX += 0.1;//avanza en -x
 
 				if (direcionAirCraft && direcionAirCraft1 && aircraftZ < -6.0) {
 					direcionAirCraft1 = false;
