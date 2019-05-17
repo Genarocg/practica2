@@ -1,0 +1,65 @@
+newmtl Black
+illum 4
+Kd 0.17 0.17 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.60 0.60 0.60
+Ns 256.00
+newmtl Glass
+illum 4
+Kd 0.15 0.15 0.15
+Ka 0.00 0.00 0.00
+Tf 0.43 0.43 0.43
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 256.00
+newmtl HH65Interior
+illum 4
+Kd 0.17 0.17 0.17
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 256.00
+newmtl HH65Skin
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+map_Kd HH65C.jpg
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 256.00
+newmtl gray
+illum 4
+Kd 0.33 0.33 0.33
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 256.00
+newmtl metal
+illum 4
+Kd 0.49 0.49 0.49
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.60 0.60 0.60
+Ns 256.00
+newmtl white
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.20 0.20 0.20
+Ns 256.00
+newmtl wipers
+illum 4
+Kd 0.26 0.26 0.26
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.60 0.60 0.60
+Ns 256.00

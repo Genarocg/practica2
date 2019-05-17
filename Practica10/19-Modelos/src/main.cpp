@@ -519,7 +519,7 @@ void applicationLoop() {
 		modelAirCraft.setScale(glm::vec3(1.0, 1.0, 1.0));
 		//se rota el modelo se coloca en la posicion deseada y se hace el desplazamiento en el eje z
 		glm::mat4 matrixAirCraft = glm::translate(glm::mat4(1.0f), glm::vec3(aircraftX, 0.0, aircraftZ));
-		matrixAirCraft = glm::translate(matrixAirCraft, glm::vec3(10.0, 2.0, 15.0));
+		//matrixAirCraft = glm::translate(matrixAirCraft, glm::vec3(10.0, 2.0, 15.0));
 		matrixAirCraft = glm::rotate(matrixAirCraft, rotationAirCraft, glm::vec3(0, 1, 0));
 		modelAirCraft.render(matrixAirCraft);
 

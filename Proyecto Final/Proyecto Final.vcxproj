@@ -121,28 +121,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="src\Box.cpp" />
-    <ClCompile Include="src\Cylinder.cpp" />
-    <ClCompile Include="src\FirstPersonCamera.cpp" />
-    <ClCompile Include="src\main01.cpp" />
-    <ClCompile Include="src\QueueTransformation.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\Sphere.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\TimeManager.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="src\Headers\Abstractmodel.h" />
-    <ClInclude Include="src\Headers\Box.h" />
-    <ClInclude Include="src\Headers\Camera.h" />
-    <ClInclude Include="src\Headers\Cylinder.h" />
-    <ClInclude Include="src\Headers\FirstPersonCamera.h" />
-    <ClInclude Include="src\Headers\QueueTransformation.h" />
-    <ClInclude Include="src\Headers\Shader.h" />
-    <ClInclude Include="src\Headers\Sphere.h" />
-    <ClInclude Include="src\Headers\Texture.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="..\Shaders\basic.fs" />
     <None Include="..\Shaders\basic.vs" />
     <None Include="..\Shaders\cubeTexture.fs" />
@@ -170,6 +148,33 @@
     <None Include="..\Shaders\typeLight.vs" />
     <None Include="..\Shaders\uniform.fs" />
     <None Include="..\Shaders\uniform.vs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Box.cpp" />
+    <ClCompile Include="src\Cylinder.cpp" />
+    <ClCompile Include="src\FirstPersonCamera.cpp" />
+    <ClCompile Include="src\LabQ.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
+    <ClCompile Include="src\Model.cpp" />
+    <ClCompile Include="src\QueueTransformation.cpp" />
+    <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Sphere.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
+    <ClCompile Include="src\TimeManager.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Headers\Abstractmodel.h" />
+    <ClInclude Include="src\Headers\Box.h" />
+    <ClInclude Include="src\Headers\Camera.h" />
+    <ClInclude Include="src\Headers\Cylinder.h" />
+    <ClInclude Include="src\Headers\FirstPersonCamera.h" />
+    <ClInclude Include="src\Headers\Mesh.h" />
+    <ClInclude Include="src\Headers\Model.h" />
+    <ClInclude Include="src\Headers\QueueTransformation.h" />
+    <ClInclude Include="src\Headers\Shader.h" />
+    <ClInclude Include="src\Headers\Sphere.h" />
+    <ClInclude Include="src\Headers\Texture.h" />
+    <ClInclude Include="src\Headers\TimeManager.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

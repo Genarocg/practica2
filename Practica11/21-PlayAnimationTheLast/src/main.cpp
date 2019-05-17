@@ -630,6 +630,11 @@ void applicationLoop() {
 			// Se modela siempre con los ejes de giro en el eje z
 			// Articulacion 1
 			glm::mat4 keyFrameJoint = matrixGlobalAnimation * interpoltaedMatrix;
+			glm::mat4 cylinderMatrixJ0 = glm::translate(keyFrameJoint glm::vec3(1.0, 0.0f, 0.0));
+			cylinderMatrixJ0 = glm::scale(cylinderMatrixJ0, glm::vec3(0.08f, 0.08f, 0.08f));
+			sphereAnimacion.render(cylinderMatrixJ0);
+
+			/*glm::mat4 keyFrameJoint = matrixGlobalAnimation * interpoltaedMatrix;
 			glm::mat4 cylinderMatrixJ0 = glm::rotate(keyFrameJoint, 1.5708f, glm::vec3(1.0, 0.0f, 0.0));
 			cylinderMatrixJ0 = glm::scale(cylinderMatrixJ0, glm::vec3(0.08f, 0.08f, 0.08f));
 			sphereAnimacion.render(cylinderMatrixJ0);
@@ -642,7 +647,7 @@ void applicationLoop() {
 			transformComp1 = keyFramesBrazo[indexKeyFrameBrazoCurr][1] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			transformComp2 = keyFramesBrazo[indexKeyFrameBrazoNext][1] * glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 			finalTrans = (float)(1.0 - interpolation) * transformComp1 + transformComp2 * interpolation;
-			interpoltaedMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(finalTrans)) * interpoltaedMatrix;
+			ñinterpoltaedMatrix = glm::translate(glm::mat4(1.0f), glm::vec3(finalTrans)) * interpoltaedMatrix;
 
 			keyFrameJoint = matrixGlobalAnimation * interpoltaedMatrix;
 			glm::mat4 cylinderMatrixJ1 = glm::rotate(keyFrameJoint, 1.5708f, glm::vec3(1.0, 0.0f, 0.0));
@@ -719,7 +724,7 @@ void applicationLoop() {
 			keyFrameJoint = matrixGlobalAnimation * interpoltaedMatrix;
 			glm::mat4 cylinderMatrixJ5 = glm::rotate(keyFrameJoint, 1.5708f, glm::vec3(1.0, 0.0f, 0.0));
 			cylinderMatrixJ5 = glm::scale(cylinderMatrixJ5, glm::vec3(0.11f, 0.11f, 0.11f));
-			sphereAnimacion.render(cylinderMatrixJ5);
+			sphereAnimacion.render(cylinderMatrixJ5);*/
 
 		}
 

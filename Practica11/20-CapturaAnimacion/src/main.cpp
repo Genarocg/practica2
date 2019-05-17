@@ -46,12 +46,12 @@ Shader shaderDirectionLight;
 Shader shaderPointLight;
 Shader shaderSpotLight;
 Shader shaderLighting;
-
-Model modelRock;
-Model modelRail;
+//
+//Model modelRock;
+//Model modelRail;
 Model modelAirCraft;
-Model arturito;
-Model modelTrain;
+//Model arturito;
+//Model modelTrain;
 
 GLuint textureID1, textureID2, textureID3, textureCespedID, textureWaterID, textureCubeTexture, textureMetalID;
 GLuint cubeTextureID;
@@ -182,8 +182,8 @@ void init(int width, int height, std::string strTitle, bool bFullScreen) {
 	cylinderAnimacion2.setShader(&shaderLighting);
 	cylinderAnimacion2.setColor(glm::vec3(0.2, 0.7, 0.3));
 
-	modelRock.loadModel("../../models/rock/rock.obj");
-	modelRail.loadModel("../../models/railroad/railroad_track.obj");
+	/*modelRock.loadModel("../../models/rock/rock.obj");
+	modelRail.loadModel("../../models/railroad/railroad_track.obj");*/
 	modelAirCraft.loadModel("../../models/Aircraft_obj/E 45 Aircraft_obj.obj");
 
 	camera->setPosition(glm::vec3(0.0f, 0.0f, 0.4f));
@@ -407,19 +407,19 @@ bool processInput(bool continueApplication) {
 		camera->moveRightCamera(true, deltaTime);
 	if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			rot1 -= 0.005f;
+			rot1 += 0.001f;
 		else
-			rot1 += 0.005f;
+			rot1 -= 0.001f;
 	if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			rot2 -= 0.005f;
+			rot2 += 0.001f;
 		else
-			rot2 += 0.005f;
+			rot2 -= 0.001f;
 	if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
-			rot3 -= 0.005f;
+			rot3 += 0.001f;
 		else
-			rot3 += 0.005f;
+			rot3 -= 0.001f;
 	if (glfwGetKey(window, GLFW_KEY_4) == GLFW_PRESS)
 		if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
 			rot4 -= 0.005f;
@@ -500,13 +500,44 @@ void applicationLoop() {
 
 		// Se utiliza la textura de piel
 		glBindTexture(GL_TEXTURE_2D, textureMetalID);
-		
+
 		glm::mat4 matrixL0 = glm::mat4(1.0f);
-		
+
+		glm::mat4 nave = matrixL0;
+
 		// Se modela siempre con los ejes de giro en el eje z
 		//convencion de denavit-hartenberg para calclar la cinematica directa de un cuerpo rigido.
 		// Articulacion 1
-		matrixL0 = glm::rotate(matrixL0, rot1, glm::vec3(0.0f, 0.0f, 1.0f));
+		matrixL0 = glm::translate(matrixL0, glm::vec3(rot1, 0.0f, 0.0f));
+		if (saveFrame)
+			ss << matToString(matrixL0) << "|";
+		modelAirCraft.setShader(&shaderLighting);
+		modelAirCraft.setProjectionMatrix(projection);
+		modelAirCraft.setViewMatrix(view);
+		modelAirCraft.setScale(glm::vec3(1.0, 1.0, 1.0));
+		glm::mat4 nave1 = glm::translate(matrixL0, glm::vec3(1.0f,1.0f,1.0f));
+		//modelAirCraft.render(nave1);
+
+		matrixL0 = glm::rotate(matrixL0,rot2, glm::vec3(0.0, 1.0f, 0.0f));
+		if (saveFrame)
+			ss << matToString(matrixL0) << "|";
+		modelAirCraft.setShader(&shaderLighting);
+		modelAirCraft.setProjectionMatrix(projection);
+		modelAirCraft.setViewMatrix(view);
+		modelAirCraft.setScale(glm::vec3(1.0, 1.0, 1.0));
+		nave1 = glm::rotate(matrixL0, 1.5708f,glm::vec3(0.0f, 1.0f, 0.0f));
+
+		matrixL0 = glm::translate(matrixL0, glm::vec3(0.0f, 0.0f, rot3));
+		if (saveFrame)
+			ss << matToString(matrixL0) << "|";
+		modelAirCraft.setShader(&shaderLighting);
+		modelAirCraft.setProjectionMatrix(projection);
+		modelAirCraft.setViewMatrix(view);
+		modelAirCraft.setScale(glm::vec3(1.0, 1.0, 1.0));
+		nave1 = glm::translate(matrixL0, glm::vec3(1.0f, 1.0f, 1.0f));
+		modelAirCraft.render(nave1);
+
+		/*matrixL0 = glm::rotate(matrixL0, rot1, glm::vec3(0.0f, 0.0f, 1.0f));
 		if (saveFrame)
 			ss << matToString(matrixL0) << "|";
 		glm::mat4 cylinderMatrixJ0 = glm::rotate(matrixL0, 1.5708f, glm::vec3(1.0, 0.0f, 0.0));
@@ -568,7 +599,7 @@ void applicationLoop() {
 		glm::mat4 cylinderMatrixJ5 = glm::rotate(matrixL0, 1.5708f, glm::vec3(1.0, 0.0f, 0.0));
 		cylinderMatrixJ5 = glm::scale(cylinderMatrixJ5, glm::vec3(0.08f, 0.08f, 0.08f));
 		sphereAnimacion.render(cylinderMatrixJ5);
-
+		*/
 		if (saveFrame) {
 			myfile << ss.str() << "|" << std::endl; 
 			saveFrame = false;
